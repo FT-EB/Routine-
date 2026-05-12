@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ROUTINE">
+  <title>ROUTINE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#08080F; --bg-card:#10101A; --bg-input:#18182A; --border:#252535;
+      --accent:#FF5500; --accent-glow:rgba(255,85,0,0.15); --accent-border:rgba(255,85,0,0.35);
+      --text:#EEEEF8; --text-dim:#8888AA; --text-muted:#3D3D55;
+      --success:#22C55E; --danger:#EF4444;
+      --indigo:#6366F1; --indigo-glow:rgba(99,102,241,0.12); --indigo-border:rgba(99,102,241,0.35);
+      --radius:16px; --radius-sm:10px;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'Noto Sans JP',sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-b);min-height:100dvh;overflow-x:hidden}
+
+    /* BOTTOM NAV */
+    .bottom-nav{
+      position:fixed;bottom:0;left:0;right:0;
+      background:var(--bg-card);border-top:1px solid var(--border);
+      display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:50;
+    }
+    .nav-btn{
+      flex:1;padding:12px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;
+      cursor:pointer;border:none;background:none;font-family:var(--font-b);transition:all 0.15s;
+    }
+    .nav-icon{font-size:20px;line-height:1}
+    .nav-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
+    .nav-btn.active .nav-label{color:var(--accent)}
+    .nav-btn.active .nav-icon{transform:scale(1.1)}
+
+    /* APP PANELS */
+    .app-panel{display:none;padding-bottom:80px}
+    .app-panel.active{display:block}
+
+    /* FITLOG STYLES */
+
+    :root {
+      --bg: #08080F;
+      --bg-card: #10101A;
+      --bg-input: #18182A;
+      --border: #252535;
+      --accent: #FF5500;
+      --accent-glow: rgba(255, 85, 0, 0.15);
+      --accent-border: rgba(255, 85, 0, 0.35);
+      --text: #EEEEF8;
+      --text-dim: #8888AA;
+      --text-muted: #3D3D55;
+      --success: #22C55E;
+      --danger: #EF4444;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font-d: 'Bebas Neue', sans-serif;
+      --font-b: 'Noto Sans JP', sans-serif;
+    }
+
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-b);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 0;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 200px;
+      background: radial-gradient(ellipse at 50% -20%, rgba(255,85,0,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .app-name {
+      font-family: var(--font-d);
+      font-size: 40px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .app-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .date-block {
+      text-align: right;
+    }
+
+    .date-dow {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .date-full {
+      font-family: var(--font-d);
+      font-size: 24px;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      color: var(--accent);
+    }
+
+    .today-badge {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius);
+    }
+
+    .badge-icon { font-size: 22px; }
+
+    .badge-label {
+      font-size: 10px;
+      color: #111111;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .badge-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FF5500;
+    }
+
+    /* ─── TABS ─── */
+    .tabs {
+      display: flex;
+      margin: 16px 20px 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 11px 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-dim);
+      border: none;
+      background: none;
+      font-family: var(--font-b);
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(255,85,0,0.4);
+    }
+
+    /* ─── CONTENT ─── */
+    .content {
+      padding: 16px 20px;
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ─── SECTION ─── */
+    .sec-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .section { margin-bottom: 22px; }
+
+    /* ─── METRIC CARDS ─── */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 14px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .metric-row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .metric-input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-d);
+      font-size: 36px;
+      letter-spacing: 1px;
+      width: 100%;
+      caret-color: var(--accent);
+    }
+
+    .metric-unit {
+      font-size: 14px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    /* ─── MEAL CARDS ─── */
+    .meal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .meal-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .meal-input, .note-input {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-b);
+      font-size: 14px;
+      resize: none;
+      line-height: 1.7;
+    }
+
+    .meal-input::placeholder,
+    .note-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .note-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+
+    /* ─── PROGRESS ─── */
+    .progress-wrap {
+      margin-bottom: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-lbl { font-size: 12px; color: var(--text-dim); }
+
+    .progress-num {
+      font-family: var(--font-d);
+      font-size: 26px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #FF8844);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ─── PREP ALERT ─── */
+    .prep-alert {
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: #FF8844;
+      line-height: 1.5;
+    }
+
+    /* ─── EXERCISE CARDS ─── */
+    .ex-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .ex-card:active { opacity: 0.8; transform: scale(0.99); }
+
+    .ex-card.done {
+      border-color: var(--success);
+      background: rgba(34,197,94,0.06);
+    }
+
+    .ex-card.failed {
+      border-color: var(--danger);
+      background: rgba(239,68,68,0.06);
+    }
+
+    .ex-check {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      color: transparent;
+    }
+
+    .ex-card.done .ex-check {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .ex-card.failed .ex-check {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: white;
+    }
+
+    .ex-info { flex: 1; min-width: 0; }
+
+    .ex-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ex-target {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 3px;
+    }
+
+    .ex-status {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .ex-card.done .ex-status { color: var(--success); }
+    .ex-card.failed .ex-status { color: var(--danger); }
+
+    /* ─── SIXPAD ─── */
+    .sixpad-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .sixpad-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: rgba(100,120,255,0.15);
+      border: 2px solid rgba(100,120,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .sixpad-info { flex: 1; }
+    .sixpad-name { font-size: 14px; font-weight: 500; }
+    .sixpad-sub { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+
+    .sixpad-toggle {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .sp-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-dim);
+      font-family: var(--font-b);
+      transition: all 0.15s;
+    }
+
+    .sp-btn:first-child { border-right: 1px solid var(--border); }
+
+    .sp-btn.yes { background: rgba(34,197,94,0.2); color: var(--success); }
+    .sp-btn.no  { background: rgba(239,68,68,0.2);  color: var(--danger); }
+
+    /* ─── REST / RUNNING ─── */
+    .rest-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .rest-icon { font-size: 52px; margin-bottom: 14px; }
+    .rest-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .rest-text { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+
+    .run-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .run-icon { font-size: 44px; margin-bottom: 12px; }
+    .run-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .run-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 20px; }
+
+    .run-btns { display: flex; gap: 10px; }
+
+    .run-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      background: none;
+      color: var(--text-dim);
+      font-family: var(--font-b);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .run-btn.yes {
+      border-color: var(--success);
+      background: rgba(34,197,94,0.1);
+      color: var(--success);
+    }
+
+    .run-btn.no {
+      border-color: var(--danger);
+      background: rgba(239,68,68,0.1);
+      color: var(--danger);
+    }
+
+    /* ─── COPY BUTTON ─── */
+    .copy-btn {
+      width: 100%;
+      padding: 17px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-b);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      margin-bottom: 10px;
+      box-shadow: 0 6px 30px rgba(255,85,0,0.35);
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .copy-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .copy-btn.ok { background: var(--success); box-shadow: 0 6px 30px rgba(34,197,94,0.35); }
+  
+
+
+    /* SLEEP QUALITY */
+    .sq-btn {
+      flex:1; padding:6px 4px; background:var(--bg-input);
+      border:1px solid var(--border); border-radius:var(--radius-sm);
+      font-size:18px; cursor:pointer; transition:all 0.15s;
+    }
+    .sq-btn.active { border-color:var(--accent); background:var(--accent-glow); }
+
+    /* MEAL INLINE */
+    .meal-add-row {
+      display:flex; gap:8px; align-items:center; margin-top:10px;
+      padding-top:10px; border-top:1px solid var(--border);
+    }
+    .meal-inline-name {
+      flex:1; font-size:13px; padding:8px 0;
+      border-bottom:1px solid var(--border);
+    }
+    .meal-inline-kcal {
+      width:70px; font-size:13px; padding:8px 0; text-align:right;
+      border-bottom:1px solid var(--border);
+    }
+    .meal-ai-btn {
+      width:34px; height:34px; background:var(--bg-input); color:var(--accent);
+      border:1px solid var(--accent-border); border-radius:50%; font-size:16px;
+      cursor:pointer; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      transition:all 0.2s;
+    }
+    .meal-ai-btn:active { background:var(--accent-glow); }
+    .meal-ai-btn.loading { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .meal-add-btn {
+      width:34px; height:34px; background:var(--accent); color:white;
+      border:none; border-radius:50%; font-size:18px; line-height:1;
+      cursor:pointer; flex-shrink:0;
+      box-shadow:0 3px 12px rgba(255,85,0,0.35);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .meal-item {
+      display:flex; align-items:center; gap:8px;
+      padding:6px 0; border-bottom:1px solid var(--border);
+      font-size:13px;
+    }
+    .meal-item:last-child { border-bottom:none; }
+    .meal-item-name { flex:1; color:var(--text); }
+    .meal-item-kcal { color:var(--text-dim); font-size:12px; flex-shrink:0; }
+    .meal-item-del {
+      background:none; border:none; color:var(--text-muted);
+      font-size:14px; cursor:pointer; padding:2px 4px; flex-shrink:0;
+    }
+
+
+    .meal-inline-kcal.estimating { opacity:0.4; }
+    .meal-inline-kcal.estimated  { border-color:var(--success); color:var(--success); }
+    /* NIGHT STYLES */
+
+    :root {
+      --bg: #08080F;
+      --bg-card: #10101A;
+      --bg-input: #18182A;
+      --border: #252535;
+      --accent: #FF5500;
+      --accent-glow: rgba(255,85,0,0.12);
+      --accent-border: rgba(255,85,0,0.35);
+      --text: #EEEEF8;
+      --text-dim: #8888AA;
+      --text-muted: #3D3D55;
+      --success: #22C55E;
+      --danger: #EF4444;
+      --indigo: #6366F1;
+      --indigo-glow: rgba(99,102,241,0.12);
+      --indigo-border: rgba(99,102,241,0.35);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font-d: 'Bebas Neue', sans-serif;
+      --font-b: 'Noto Sans JP', sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-b);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      padding: calc(env(safe-area-inset-top,0px) + 20px) 20px 0;
+      position: relative;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 220px;
+      background: radial-gradient(ellipse at 50% -20%, rgba(99,102,241,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-row { display:flex; justify-content:space-between; align-items:flex-start; }
+    .app-name { font-family:var(--font-d); font-size:38px; letter-spacing:3px; color:var(--indigo); line-height:1; }
+    .app-sub  { font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+    .date-block { text-align:right; }
+    .date-dow  { font-size:11px; color:var(--accent); letter-spacing:1px; }
+    .date-full { font-family:var(--font-d); font-size:24px; letter-spacing:1px; line-height:1.2; color:var(--accent); }
+
+    .today-badge {
+      margin-top:14px;
+      display:flex; align-items:center; gap:12px;
+      padding:13px 16px;
+      background: var(--indigo-glow);
+      border: 1px solid var(--indigo-border);
+      border-radius: var(--radius);
+    }
+    .badge-icon { font-size:22px; }
+    .badge-label { font-size:10px; color:#111111; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+    .badge-title { font-size:16px; font-weight:700; color:#FF5500; }
+
+    /* ── WEEK STRIP ── */
+    .week-strip {
+      display:flex; gap:6px;
+      margin: 16px 20px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .week-strip::-webkit-scrollbar { display:none; }
+    .day-pill {
+      flex-shrink: 0;
+      display: flex; flex-direction:column; align-items:center;
+      gap: 4px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all 0.18s;
+      min-width: 44px;
+    }
+    .day-pill:active { opacity:0.7; transform:scale(0.97); }
+    .day-pill.active {
+      border-color: var(--indigo);
+      background: var(--indigo-glow);
+    }
+    .day-pill.today .dp-name { color: var(--accent); }
+    .dp-name { font-size:11px; color:var(--text-dim); font-weight:500; }
+    .dp-icon { font-size:14px; line-height:1; }
+    .dp-dots { display:flex; gap:2px; height:5px; align-items:center; }
+    .dp-dot  { width:4px; height:4px; border-radius:50%; background:var(--text-muted); }
+    .dp-dot.done { background:var(--success); }
+    .dp-dot.active-day { background:var(--indigo); }
+
+    /* ── CONTENT ── */
+    .content {
+      padding: 16px 20px;
+      padding-bottom: calc(env(safe-area-inset-bottom,0px) + 20px);
+    }
+    .sec-label {
+      font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:10px;
+    }
+    .section { margin-bottom:22px; }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:14px 16px; margin-bottom:16px;
+    }
+    .progress-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .progress-lbl { font-size:12px; color:var(--text-dim); }
+    .progress-num { font-family:var(--font-d); font-size:26px; color:var(--indigo); letter-spacing:1px; }
+    .progress-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .progress-fill {
+      height:100%;
+      background: linear-gradient(90deg, var(--indigo), #A5B4FC);
+      border-radius:2px;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .progress-fill.done-all { background: linear-gradient(90deg, var(--success), #4ADE80); }
+
+    /* ── TASK CARDS ── */
+    .task-card {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:14px 16px; margin-bottom:10px;
+      display:flex; align-items:center; gap:14px;
+      cursor:pointer;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-user-select:none; user-select:none;
+    }
+    .task-card:active { opacity:0.8; transform:scale(0.99); }
+    .task-card.done {
+      border-color: var(--success);
+      background: rgba(34,197,94,0.06);
+    }
+    .task-card.sleep {
+      cursor:default; opacity:0.5;
+    }
+
+    .task-check {
+      width:42px; height:42px; border-radius:50%;
+      border:2px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; flex-shrink:0;
+      transition:all 0.2s; color:transparent;
+    }
+    .task-card.done .task-check {
+      background:var(--success); border-color:var(--success); color:white;
+    }
+    .task-card.sleep .task-check {
+      background:var(--bg-input); border-color:var(--border); color:var(--text-muted);
+    }
+
+    .task-info { flex:1; min-width:0; }
+    .task-name { font-size:14px; font-weight:500; color:var(--text); }
+    .task-meta { font-size:11px; color:var(--text-dim); margin-top:3px; }
+    .task-card.done .task-name { color: var(--success); }
+
+    .task-status {
+      font-size:10px; font-weight:700; letter-spacing:0.5px;
+      text-transform:uppercase; color:var(--text-muted); flex-shrink:0;
+    }
+    .task-card.done .task-status { color:var(--success); }
+
+    /* ── FITLOG BUTTON ── */
+    .fitlog-btn {
+      width:100%; padding:17px;
+      background: var(--accent);
+      color:white; border:none;
+      border-radius:var(--radius);
+      font-family:var(--font-b);
+      font-size:15px; font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 6px 30px rgba(255,85,0,0.35);
+      transition:all 0.2s;
+      letter-spacing:0.5px;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+    }
+    .fitlog-btn:active { transform:scale(0.98); opacity:0.9; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display:none; position:fixed; inset:0; z-index:100;
+      background:rgba(0,0,0,0.75); backdrop-filter:blur(4px);
+      align-items:flex-end; justify-content:center;
+    }
+    .modal-overlay.show { display:flex; }
+    .modal {
+      width:100%; max-width:480px;
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:var(--radius) var(--radius) 0 0;
+      padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+    .modal-title { font-size:16px; font-weight:700; margin-bottom:6px; }
+    .modal-sub   { font-size:12px; color:var(--text-dim); line-height:1.6; margin-bottom:18px; }
+    .modal-input {
+      width:100%; padding:14px;
+      background:var(--bg-input); border:1px solid var(--border);
+      border-radius:var(--radius-sm); color:var(--text);
+      font-family:var(--font-b); font-size:13px; outline:none;
+      margin-bottom:10px;
+    }
+    .modal-input:focus { border-color:var(--accent); }
+    .modal-input::placeholder { color:var(--text-muted); }
+    .modal-file-btn {
+      width:100%; padding:12px;
+      background:var(--bg-input); border:1px solid var(--border);
+      border-radius:var(--radius-sm); color:var(--text-dim);
+      font-family:var(--font-b); font-size:13px; cursor:pointer;
+      margin-bottom:16px; display:flex; align-items:center; gap:8px; justify-content:center;
+    }
+    .modal-actions { display:flex; gap:10px; }
+    .modal-cancel {
+      flex:1; padding:14px; background:none; border:1px solid var(--border);
+      border-radius:var(--radius-sm); color:var(--text-dim);
+      font-family:var(--font-b); font-size:14px; font-weight:600; cursor:pointer;
+    }
+    .modal-save {
+      flex:2; padding:14px; background:var(--accent); border:none;
+      border-radius:var(--radius-sm); color:white;
+      font-family:var(--font-b); font-size:14px; font-weight:700; cursor:pointer;
+      box-shadow:0 4px 20px rgba(255,85,0,0.3);
+    }
+    .fitlog-row { display:flex; gap:8px; margin-top:10px; }
+    .fitlog-edit-btn {
+      padding:17px 16px; background:var(--bg-card);
+      border:1px solid var(--border); border-radius:var(--radius);
+      color:var(--text-dim); font-size:18px; cursor:pointer;
+      transition:all 0.2s; flex-shrink:0;
+    }
+    .fitlog-edit-btn:active { opacity:0.7; }
+
+    /* ── COMPLETE BANNER ── */
+    .complete-banner {
+      display:none;
+      background:rgba(34,197,94,0.1);
+      border:1px solid rgba(34,197,94,0.35);
+      border-radius:var(--radius);
+      padding:16px; margin-bottom:16px;
+      text-align:center;
+    }
+    .complete-banner.show { display:block; }
+    .complete-banner-icon { font-size:28px; margin-bottom:6px; }
+    .complete-banner-text { font-size:14px; font-weight:700; color:var(--success); }
+    .complete-banner-sub  { font-size:12px; color:var(--text-dim); margin-top:4px; }
+  
+  </style>
+</head>
+<body>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-night" onclick="switchApp('night')">
+    <span class="nav-icon">🌙</span>
+    <span class="nav-label">NIGHT</span>
+  </button>
+  <button class="nav-btn" id="nav-fitlog" onclick="switchApp('fitlog')">
+    <span class="nav-icon">💪</span>
+    <span class="nav-label">FITLOG</span>
+  </button>
+</div>
+
+<div class="app-panel active" id="panel-night">
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="app-name">NIGHT</div>
+      <div class="app-sub">Evening Routine Tracker</div>
+    </div>
+    <div class="date-block">
+      <div class="date-dow" id="dowDisplay"></div>
+      <div class="date-full" id="dateDisplay"></div>
+    </div>
+  </div>
+  <div class="today-badge">
+    <div class="badge-icon" id="todayIcon"></div>
+    <div>
+      <div class="badge-label">TONIGHT</div>
+      <div class="badge-title" id="todayTitle"></div>
+    </div>
+  </div>
+</div>
+
+<div class="week-strip" id="weekStrip"></div>
+
+<div class="content">
+  <div class="complete-banner" id="completeBanner">
+    <div class="complete-banner-icon">🌙</div>
+    <div class="complete-banner-text">今夜のルーティン完了！</div>
+    <div class="complete-banner-sub">お疲れ様でした。ゆっくり休んでください。</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-head">
+      <span class="progress-lbl">今夜の達成状況</span>
+      <span class="progress-num" id="progressNum">0/0</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-label">タイムライン</div>
+    <div id="taskList"></div>
+  </div>
+
+  </div>
+</div>
+
+<div class="app-panel" id="panel-fitlog">
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="app-name">FITLOG</div>
+      <div class="app-sub">Goal: David's Physique</div>
+    </div>
+    <div class="date-block">
+      <div class="date-dow" id="f_dowDisplay"></div>
+      <div class="date-full" id="f_dateDisplay"></div>
+    </div>
+  </div>
+  <div class="today-badge">
+    <div class="badge-icon" id="f_todayIcon"></div>
+    <div>
+      <div class="badge-label">TODAY</div>
+      <div class="badge-title" id="f_todayTitle"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('morning')">🌅 朝の記録</button>
+  <button class="tab" onclick="switchTab('meal')">🍽 食事</button>
+  <button class="tab" onclick="switchTab('training')">💪 トレーニング</button>
+</div>
+
+<div class="content">
+
+  <!-- ── MORNING TAB ── -->
+  <div id="panel-morning" class="tab-panel active">
+
+    <div class="section">
+      <div class="sec-label">身体データ</div>
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-label">体重</div>
+          <div class="metric-row">
+            <input class="metric-input" id="weight" type="number" step="0.1" placeholder="65.0" inputmode="decimal">
+            <span class="metric-unit">kg</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">体脂肪率</div>
+          <div class="metric-row">
+            <input class="metric-input" id="bodyfat" type="number" step="0.1" placeholder="18.0" inputmode="decimal">
+            <span class="metric-unit">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-label">睡眠</div>
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-label">睡眠時間</div>
+          <div class="metric-row">
+            <input class="metric-input" id="sleep-hours" type="number" step="0.5" placeholder="7.0" inputmode="decimal">
+            <span class="metric-unit">時間</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">睡眠の質</div>
+          <div style="display:flex;gap:6px;margin-top:6px;" id="sleep-quality-btns">
+            <button onclick="setSleepQ(1)" class="sq-btn" data-q="1">😴</button>
+            <button onclick="setSleepQ(2)" class="sq-btn" data-q="2">😐</button>
+            <button onclick="setSleepQ(3)" class="sq-btn" data-q="3">😊</button>
+            <button onclick="setSleepQ(4)" class="sq-btn" data-q="4">😄</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="section">
+      <div class="sec-label">気になること・メモ</div>
+      <div class="note-card">
+        <textarea class="note-input" id="notes" placeholder="体調、睡眠の質、腰の状態、気になることなど..." rows="3"></textarea>
+      </div>
+    </div>
+
+    <button class="copy-btn" id="btn-morning" onclick="copyMorning()">
+      📋 クロードにコピー
+    </button>
+  </div>
+
+
+  <!-- ── MEAL TAB ── -->
+  <div id="panel-meal" class="tab-panel">
+    <div class="section">
+
+      <!-- 合計カロリー -->
+      <div class="metric-card" style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="metric-label">今日の合計カロリー</div>
+          <div class="metric-row">
+            <span id="totalKcalDisplay" style="font-family:var(--font-d);font-size:40px;color:var(--accent);letter-spacing:1px;">0</span>
+            <span class="metric-unit" style="margin-left:4px;">kcal</span>
+          </div>
+        </div>
+        <div style="font-size:36px;">🔥</div>
+      </div>
+
+      <!-- 朝食 -->
+      <div class="meal-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div class="meal-label" style="margin:0;">🌅 朝食</div>
+          <span id="kcal-breakfast" style="font-size:12px;color:var(--text-dim);">0 kcal</span>
+        </div>
+        <div id="list-breakfast"></div>
+        <div class="meal-add-row">
+          <input class="meal-input meal-inline-name" id="name-breakfast" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')fetchKcal('breakfast')">
+          <input class="meal-input meal-inline-kcal" id="kcal-input-breakfast" type="number" inputmode="numeric" placeholder="kcal" style="transition:opacity 0.2s;">
+          <button class="meal-ai-btn" id="ai-btn-breakfast" onclick="fetchKcal('breakfast')" title="AIでカロリーを推定">⚡</button><button class="meal-add-btn" onclick="addMealCat('breakfast')">＋</button>
+        </div>
+      </div>
+
+      <!-- 昼食 -->
+      <div class="meal-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div class="meal-label" style="margin:0;">☀️ 昼食</div>
+          <span id="kcal-lunch" style="font-size:12px;color:var(--text-dim);">0 kcal</span>
+        </div>
+        <div id="list-lunch"></div>
+        <div class="meal-add-row">
+          <input class="meal-input meal-inline-name" id="name-lunch" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')fetchKcal('lunch')">
+          <input class="meal-input meal-inline-kcal" id="kcal-input-lunch" type="number" inputmode="numeric" placeholder="kcal" style="transition:opacity 0.2s;">
+          <button class="meal-ai-btn" id="ai-btn-lunch" onclick="fetchKcal('lunch')" title="AIでカロリーを推定">⚡</button><button class="meal-add-btn" onclick="addMealCat('lunch')">＋</button>
+        </div>
+      </div>
+
+      <!-- 夕食 -->
+      <div class="meal-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div class="meal-label" style="margin:0;">🌙 夕食</div>
+          <span id="kcal-dinner" style="font-size:12px;color:var(--text-dim);">0 kcal</span>
+        </div>
+        <div id="list-dinner"></div>
+        <div class="meal-add-row">
+          <input class="meal-input meal-inline-name" id="name-dinner" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')fetchKcal('dinner')">
+          <input class="meal-input meal-inline-kcal" id="kcal-input-dinner" type="number" inputmode="numeric" placeholder="kcal" style="transition:opacity 0.2s;">
+          <button class="meal-ai-btn" id="ai-btn-dinner" onclick="fetchKcal('dinner')" title="AIでカロリーを推定">⚡</button><button class="meal-add-btn" onclick="addMealCat('dinner')">＋</button>
+        </div>
+      </div>
+
+      <!-- 間食 -->
+      <div class="meal-card" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div class="meal-label" style="margin:0;">🍪 間食</div>
+          <span id="kcal-snack" style="font-size:12px;color:var(--text-dim);">0 kcal</span>
+        </div>
+        <div id="list-snack"></div>
+        <div class="meal-add-row">
+          <input class="meal-input meal-inline-name" id="name-snack" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')fetchKcal('snack')">
+          <input class="meal-input meal-inline-kcal" id="kcal-input-snack" type="number" inputmode="numeric" placeholder="kcal" style="transition:opacity 0.2s;">
+          <button class="meal-ai-btn" id="ai-btn-snack" onclick="fetchKcal('snack')" title="AIでカロリーを推定">⚡</button><button class="meal-add-btn" onclick="addMealCat('snack')">＋</button>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="copy-btn" id="btn-meal" onclick="copyMeals()">
+      📋 クロードにコピー
+    </button>
+  </div>
+
+  <!-- ── TRAINING TAB ── -->
+  <div id="panel-training" class="tab-panel">
+    <div id="trainingContent"></div>
+  </div>
+
+</div>
+
+<script>
+  // ── DATA ──
+  const DAYS = ['日','月','火','水','木','金','土'];
+
+  const SCHEDULE = {
+    0: { type:'rest',     icon:'🏖',  title:'完全休養・チートデイ',
+         desc:'今日はしっかり休んで回復させましょう。チートデイを楽しんで！' },
+    1: { type:'strength', icon:'💪',  title:'胸・肩・三頭筋',
+         exercises: [
+           { key:'pw',  name:'プッシュアップ（ワイド）',         target:'3セット × 12回' },
+           { key:'sp',  name:'ダンベルショルダープレス',         target:'3セット × 10回' },
+           { key:'sr',  name:'サイドレイズ',                    target:'3セット × 15回' },
+           { key:'dp',  name:'ダイヤモンドプッシュアップ',       target:'3セット × 10回' },
+           { key:'pp',  name:'パイクプッシュアップ',             target:'2セット × 10回' },
+         ]},
+    2: { type:'running',  icon:'🏃',  title:'ランニング',
+         desc:'20〜30分、会話できるゆっくりペースで。21時以降なので激しくしすぎず◎' },
+    3: { type:'strength', icon:'🔙',  title:'背中・二頭筋・体幹',
+         prep:'ストレッチポールで胸椎モビリティを確認してから開始！',
+         exercises: [
+           { key:'br',  name:'ベントオーバーロウ',               target:'3セット × 10回' },
+           { key:'or',  name:'ワンハンドダンベルロウ',           target:'3セット × 12回（左右）' },
+           { key:'bd',  name:'バードドッグ',                    target:'3セット × 10回（左右）' },
+           { key:'db',  name:'デッドバッグ',                    target:'3セット × 10回' },
+           { key:'pl',  name:'プランク',                        target:'3セット × 45秒' },
+           { key:'cu',  name:'ダンベルカール',                   target:'2セット × 12回' },
+         ]},
+    4: { type:'rest',     icon:'😴',  title:'休養日',
+         desc:'筋肉は休んでいる間に育ちます。ストレッチポールでほぐすだけでもOK。' },
+    5: { type:'strength', icon:'🦵',  title:'脚・臀部・腰回り',
+         prep:'ストレッチポールで腸腰筋をほぐしてから開始！（腰痛予防に超重要）',
+         exercises: [
+           { key:'rdl', name:'ルーマニアンデッドリフト',         target:'3セット × 12回' },
+           { key:'bss', name:'ブルガリアンスプリットスクワット', target:'3セット × 10回（左右）' },
+           { key:'ht',  name:'ヒップスラスト',                  target:'3セット × 15回' },
+           { key:'cr',  name:'カーフレイズ',                    target:'3セット × 20回' },
+           { key:'spr', name:'ストレッチポール：腸腰筋リリース', target:'各1分' },
+         ]},
+    6: { type:'running',  icon:'🏃',  title:'ランニング',
+         desc:'20〜30分、ゆっくりペースで。余裕があれば少し距離を伸ばしてOK！' },
+  };
+
+  // ── STATE ──
+  const exState = {};   // key -> 'done'|'failed'|null
+  let runState = null;  // 'done'|'failed'|null
+  let sixpadState = null; // 'yes'|'no'|null
+
+  // ── INIT ──
+  const now = new Date();
+  const dow = now.getDay();
+  const today = SCHEDULE[dow];
+
+  document.getElementById('dowDisplay').textContent = DAYS[dow] + '曜日';
+  document.getElementById('dateDisplay').textContent =
+    `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())}`;
+  document.getElementById('todayIcon').textContent = today.icon;
+  document.getElementById('todayTitle').textContent = today.title;
+
+  renderTraining();
+
+  // ── TABS ──
+  function switchTab(t) {
+    const tabs = document.querySelectorAll('.tab');
+    const order = ['morning','meal','training'];
+    tabs.forEach((el,i) => el.classList.toggle('active', order[i]===t));
+    document.getElementById('panel-morning').classList.toggle('active', t==='morning');
+    document.getElementById('panel-meal').classList.toggle('active', t==='meal');
+    document.getElementById('panel-training').classList.toggle('active', t==='training');
+  }
+
+  // ── MEAL LOG ──
+  const MEAL_CATS = [
+    { key:'breakfast', label:'朝食', icon:'🌅' },
+    { key:'lunch',     label:'昼食', icon:'☀️' },
+    { key:'dinner',    label:'夕食', icon:'🌙' },
+    { key:'snack',     label:'間食', icon:'🍪' },
+  ];
+
+  function mealDateKey() {
+    return 'fitlog_meals2_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();
+  }
+  function loadMeals() {
+    try { return JSON.parse(localStorage.getItem(mealDateKey())||'{}'); } catch { return {}; }
+  }
+  function saveMeals(data) {
+    try { localStorage.setItem(mealDateKey(), JSON.stringify(data)); } catch {}
+  }
+
+  function addMealCat(cat) {
+    const name = (document.getElementById('name-'+cat).value||'').trim();
+    const kcal = parseInt(document.getElementById('kcal-input-'+cat).value||'0',10);
+    if (!name) { document.getElementById('name-'+cat).focus(); return; }
+    const data = loadMeals();
+    if (!data[cat]) data[cat] = [];
+    data[cat].push({ id: Date.now(), name, kcal: isNaN(kcal)?0:kcal });
+    saveMeals(data);
+    document.getElementById('name-'+cat).value = '';
+    document.getElementById('kcal-input-'+cat).value = '';
+    renderMeals();
+  }
+
+  function deleteMealItem(cat, id) {
+    const data = loadMeals();
+    data[cat] = (data[cat]||[]).filter(m => m.id !== id);
+    saveMeals(data);
+    renderMeals();
+  }
+
+  // ── カロリーDB ──
+  const KCAL_DB = [
+    // 主食
+    ['白米',168],['ご飯',168],['玄米',165],['おにぎり',185],['食パン',158],
+    ['トースト',158],['パン',200],['フランスパン',130],['うどん',105],['そば',132],
+    ['ラーメン',450],['チャーハン',400],['パスタ',380],['スパゲティ',380],
+    ['カレーライス',650],['親子丼',550],['牛丼',650],['豚丼',600],
+    ['天丼',700],['海鮮丼',500],['チャーシュー麺',500],
+    // 肉類
+    ['鶏むね肉',108],['鶏もも肉',190],['ささみ',98],['サラダチキン',105],
+    ['豚肉',180],['豚バラ',386],['牛肉',250],['牛バラ',371],['ひき肉',200],
+    ['唐揚げ',250],['から揚げ',250],['フライドチキン',300],
+    ['焼き鳥',180],['とんかつ',380],['ハンバーグ',350],['ステーキ',400],
+    ['ソーセージ',160],['ウインナー',160],['ベーコン',160],['ハム',120],
+    // 魚介
+    ['サーモン',138],['鮭',133],['マグロ',125],['ツナ',70],['ツナ缶',70],
+    ['サバ',247],['さば',247],['アジ',126],['エビ',82],['イカ',76],
+    ['タコ',76],['焼き魚',180],['刺身',150],['寿司',300],
+    // 卵・乳製品
+    ['卵',76],['たまご',76],['ゆで卵',76],['目玉焼き',100],['スクランブルエッグ',150],
+    ['チーズ',340],['牛乳',67],['ヨーグルト',62],['無脂肪ヨーグルト',40],
+    // 豆腐・大豆
+    ['豆腐',56],['絹豆腐',56],['木綿豆腐',72],['納豆',200],['枝豆',135],
+    ['豆乳',46],['味噌汁',40],
+    // 野菜
+    ['サラダ',30],['レタス',12],['キャベツ',23],['トマト',19],['きゅうり',14],
+    ['ブロッコリー',33],['ほうれん草',20],['にんじん',41],['玉ねぎ',37],
+    ['じゃがいも',76],['さつまいも',132],['アボカド',187],
+    // 果物
+    ['バナナ',86],['りんご',54],['みかん',46],['オレンジ',46],['ぶどう',59],
+    ['いちご',34],['スイカ',37],['メロン',42],
+    // 加工食品・コンビニ
+    ['プロテインバー',200],['プロテイン',120],['プロテインシェイク',150],
+    ['おにぎり',185],['サンドイッチ',280],['菓子パン',350],
+    ['カップ麺',350],['カップラーメン',350],['インスタントラーメン',350],
+    ['冷凍食品',300],['弁当',600],
+    // スナック・お菓子
+    ['ポテトチップス',540],['クッキー',500],['チョコレート',550],
+    ['アイス',200],['ソフトクリーム',150],['プリン',120],
+    ['ケーキ',350],['シュークリーム',200],
+    // 飲み物
+    ['水',0],['お茶',0],['緑茶',0],['コーヒー',4],['ブラックコーヒー',4],
+    ['カフェラテ',90],['オレンジジュース',112],['野菜ジュース',40],
+    ['コーラ',180],['スポーツドリンク',50],['牛乳',67],
+    ['プロテイン飲料',150],['エナジードリンク',80],
+    ['ザバスヨーグルト',75],['ザバス ヨーグルト',75],['ザバスミルク',207],['ザバス ミルク',207],['ザバスミルクプロテイン',207],['ザバス',150],
+    // 調理品
+    ['味噌汁',40],['スープ',60],['シチュー',250],['カレー',250],
+    ['煮物',120],['炒め物',200],['揚げ物',300],
+    // 外食
+    ['マクドナルド ビッグマック',525],['ビッグマック',525],
+    ['マクドナルド フライドポテト',310],['フライドポテト',310],
+    ['吉野家 牛丼並',652],['すき家 牛丼並',648],
+    ['松屋 牛めし並',636],['サブウェイ',350],
+  ];
+
+  function estimateKcal(query) {
+    const q = query.toLowerCase().replace(/\s/g,'');
+    // 完全一致
+    for (const [food, kcal] of KCAL_DB) {
+      if (food.toLowerCase() === q) return kcal;
+    }
+    // 部分一致（クエリがDBの食品名を含む、またはDBがクエリを含む）
+    let best = null, bestLen = 0;
+    for (const [food, kcal] of KCAL_DB) {
+      const f = food.toLowerCase();
+      if (q.includes(f) || f.includes(q)) {
+        if (food.length > bestLen) { best = kcal; bestLen = food.length; }
+      }
+    }
+    return best;
+  }
+
+  function fetchKcal(cat) {
+    const nameEl = document.getElementById('name-'+cat);
+    const kcalEl = document.getElementById('kcal-input-'+cat);
+    const aiBtn  = document.getElementById('ai-btn-'+cat);
+    const name   = (nameEl.value||'').trim();
+    if (!name) { nameEl.focus(); return; }
+    const result = estimateKcal(name);
+    if (result !== null) {
+      kcalEl.value = result;
+      kcalEl.classList.add('estimated');
+      if (aiBtn) aiBtn.textContent = '✓';
+      setTimeout(()=>{
+        kcalEl.classList.remove('estimated');
+        if (aiBtn) aiBtn.textContent = '⚡';
+      }, 2000);
+    } else {
+      // 見つからなかった場合は点滅してフォーカス
+      kcalEl.placeholder = '手入力してね';
+      kcalEl.focus();
+      if (aiBtn) {
+        aiBtn.textContent = '？';
+        setTimeout(()=> aiBtn.textContent = '⚡', 2000);
+      }
+    }
+  }
+
+  function renderMeals() {
+    const data = loadMeals();
+    let total = 0;
+    MEAL_CATS.forEach(c => {
+      const items = data[c.key] || [];
+      const catKcal = items.reduce((s,m)=>s+(m.kcal||0),0);
+      total += catKcal;
+      document.getElementById('kcal-'+c.key).textContent = catKcal ? catKcal.toLocaleString()+' kcal' : '';
+      const listEl = document.getElementById('list-'+c.key);
+      listEl.innerHTML = items.map(m => `
+        <div class="meal-item">
+          <span class="meal-item-name">${m.name}</span>
+          <span class="meal-item-kcal">${m.kcal ? m.kcal.toLocaleString()+' kcal' : ''}</span>
+          <button class="meal-item-del" onclick="deleteMealItem('${c.key}',${m.id})">✕</button>
+        </div>
+      `).join('');
+    });
+    document.getElementById('totalKcalDisplay').textContent = total.toLocaleString();
+  }
+
+  function copyMeals() {
+    const data = loadMeals();
+    let total = 0;
+    let text = '【'+dateLabel()+'】食事記録\n\n';
+    MEAL_CATS.forEach(c => {
+      const items = data[c.key]||[];
+      if (!items.length) return;
+      text += c.icon+' '+c.label+'\n';
+      items.forEach(m => {
+        text += '  ・'+m.name;
+        if (m.kcal) { text += '（'+m.kcal.toLocaleString()+' kcal）'; total += m.kcal; }
+        text += '\n';
+      });
+    });
+    text += '\n合計：'+total.toLocaleString()+' kcal';
+    send(text, 'btn-meal');
+  }
+
+  // ── SLEEP QUALITY ──
+  let sleepQuality = 0;
+  function setSleepQ(q) {
+    sleepQuality = sleepQuality===q ? 0 : q;
+    document.querySelectorAll('.sq-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.q)===sleepQuality);
+    });
+  }
+
+  renderMeals();
+
+  // ── RENDER TRAINING ──
+  function renderTraining() {
+    const c = document.getElementById('trainingContent');
+
+    if (today.type === 'rest') {
+      c.innerHTML = `
+        <div class="rest-card">
+          <div class="rest-icon">${today.icon}</div>
+          <div class="rest-title">${today.title}</div>
+          <div class="rest-text">${today.desc}</div>
+        </div>`;
+      return;
+    }
+
+    if (today.type === 'running') {
+      c.innerHTML = `
+        <div class="run-card">
+          <div class="run-icon">${today.icon}</div>
+          <div class="run-title">${today.title}</div>
+          <div class="run-desc">${today.desc}</div>
+          <div class="run-btns">
+            <button class="run-btn ${runState==='done'?'yes':''}" onclick="setRun('done')">✅ 完走した</button>
+            <button class="run-btn ${runState==='failed'?'no':''}"  onclick="setRun('failed')">❌ できなかった</button>
+          </div>
+        </div>
+        ${sixpadSection()}
+        <button class="copy-btn ${''}" id="btn-training" onclick="copyTraining()">📋 クロードにコピー</button>`;
+      return;
+    }
+
+    // strength
+    const total = today.exercises.length;
+    const done  = today.exercises.filter(e => exState[e.key]==='done').length;
+    const pct   = total ? (done/total*100) : 0;
+
+    let html = '';
+
+    if (today.prep) html += `<div class="prep-alert">⚡ ${today.prep}</div>`;
+
+    html += `<div class="progress-wrap">
+      <div class="progress-head">
+        <span class="progress-lbl">達成状況</span>
+        <span class="progress-num">${done}/${total}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+
+    today.exercises.forEach(ex => {
+      const s = exState[ex.key] || 'none';
+      const cls = s==='done' ? 'done' : s==='failed' ? 'failed' : '';
+      const chk = s==='done' ? '✓' : s==='failed' ? '✗' : '';
+      const lbl = s==='done' ? '達成' : s==='failed' ? '未達成' : 'タップ';
+      html += `<div class="ex-card ${cls}" onclick="toggleEx('${ex.key}')">
+        <div class="ex-check">${chk}</div>
+        <div class="ex-info">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-target">${ex.target}</div>
+        </div>
+        <div class="ex-status">${lbl}</div>
+      </div>`;
+    });
+
+    html += sixpadSection();
+    html += `<button class="copy-btn" id="btn-training" onclick="copyTraining()">📋 クロードにコピー</button>`;
+    c.innerHTML = html;
+  }
+
+  function sixpadSection() {
+    const yes = sixpadState === 'yes';
+    const no  = sixpadState === 'no';
+    return `<div class="sixpad-card">
+      <div class="sixpad-icon">⚡</div>
+      <div class="sixpad-info">
+        <div class="sixpad-name">シックスパッド</div>
+        <div class="sixpad-sub">体幹・腹筋への使用</div>
+      </div>
+      <div class="sixpad-toggle">
+        <button class="sp-btn ${yes?'yes':''}" onclick="setSixpad('yes')">使用</button>
+        <button class="sp-btn ${no?'no':''}"   onclick="setSixpad('no')">なし</button>
+      </div>
+    </div>`;
+  }
+
+  // ── ACTIONS ──
+  function toggleEx(key) {
+    const s = exState[key] || 'none';
+    exState[key] = s==='none' ? 'done' : s==='done' ? 'failed' : 'none';
+    renderTraining();
+  }
+
+  function setRun(s) {
+    runState = runState===s ? null : s;
+    renderTraining();
+  }
+
+  function setSixpad(s) {
+    sixpadState = sixpadState===s ? null : s;
+    renderTraining();
+  }
+
+  // ── COPY ──
+  function dateLabel() {
+    return `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${DAYS[dow]}）`;
+  }
+
+  function copyMorning() {
+    const sl = val('sleep-hours') || '未記入';
+    const sqLabel = ['','😴 不良','😐 普通','😊 良好','😄 最高'];
+    const sq = sleepQuality ? sqLabel[sleepQuality] : '未記入';
+    const w  = val('weight')   || '未記入';
+    const bf = val('bodyfat')  || '未記入';
+    const br = val('breakfast')|| '未記入';
+    const lu = val('lunch')    || '未記入';
+    const di = val('dinner')   || '未記入';
+    const no = val('notes')    || 'なし';
+
+    send(`【${dateLabel()}】朝の記録
+
+📊 身体データ
+睡眠：${sl}時間（${sq}）\n体重：${w}kg　体脂肪率：${bf}%
+
+🍽 昨日の食事
+朝：${br}
+昼：${lu}
+夜：${di}
+
+💬 気になること
+${no}`, 'btn-morning');
+  }
+
+  function copyTraining() {
+    let text = `【${dateLabel()}】トレーニング記録\n`;
+
+    if (today.type === 'running') {
+      const r = runState==='done' ? '完走 ✅' : runState==='failed' ? 'できなかった ❌' : '未記録';
+      text += `🏃 ランニング：${r}`;
+    } else if (today.type === 'strength') {
+      text += `💪 ${today.title}\n\n`;
+      today.exercises.forEach(ex => {
+        const s = exState[ex.key] || 'none';
+        const m = s==='done' ? '✅' : s==='failed' ? '❌' : '－';
+        text += `${m} ${ex.name}（${ex.target}）\n`;
+      });
+    }
+
+    const sp = sixpadState==='yes' ? '使用 ✅' : sixpadState==='no' ? 'なし' : '未記録';
+    text += `\n⚡ シックスパッド：${sp}`;
+
+    send(text, 'btn-training');
+  }
+
+  function send(text, btnId) {
+    navigator.clipboard.writeText(text).then(() => flash(btnId))
+      .catch(() => {
+        const ta = Object.assign(document.createElement('textarea'),
+          { value: text, style: 'position:fixed;opacity:0' });
+        document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        flash(btnId);
+      });
+  }
+
+  function flash(id) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ コピーしました！';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('ok'); }, 2000);
+  }
+
+  function val(id) { return (document.getElementById(id)||{}).value||''; }
+  function pad(n)  { return String(n).padStart(2,'0'); }
+</script>
+</div>
+
+<script>
+  function switchApp(app) {
+    document.getElementById('panel-night').classList.toggle('active', app==='night');
+    document.getElementById('panel-fitlog').classList.toggle('active', app==='fitlog');
+    document.getElementById('nav-night').classList.toggle('active', app==='night');
+    document.getElementById('nav-fitlog').classList.toggle('active', app==='fitlog');
+  }
+</script>
+
+<script>
+/* ===== NIGHT ===== */
+(function() {
+
+  const DAYS_JP = ['日','月','火','水','木','金','土'];
+  const DAYS_SHORT = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+  // 0=日:piano 1=月:piano 2=火:run 3=水:piano 4=木:run 5=金:base 6=土:run
+  const DAY_TYPES = ['piano','piano','run','piano','run','base','run'];
+
+  const TYPE_META = {
+    run:   { icon:'🏃', label:'トレーニング＋ランニングの日' },
+    piano: { icon:'🎹', label:'トレーニング＋ピアノの日'     },
+    base:  { icon:'💪', label:'トレーニングの日'              },
+  };
+
+  const SCHEDULES = {
+    base: [
+      { key:'train',   icon:'💪', name:'トレーニング', time:'21:00', dur:'40分' },
+      { key:'bath',    icon:'🛁', name:'お風呂',       time:'21:40', dur:'20分' },
+      { key:'stretch', icon:'🧘', name:'ストレッチ',   time:'22:00', dur:'15分' },
+      { key:'read',    icon:'📖', name:'読書',         time:'22:15', dur:'30分' },
+      { key:'sleep',   icon:'🌙', name:'就寝準備',     time:'22:45', dur:'〜24:00', isSleep:true },
+    ],
+    run: [
+      { key:'train',   icon:'💪', name:'トレーニング', time:'21:00', dur:'40分' },
+      { key:'run',     icon:'🏃', name:'ランニング',   time:'21:40', dur:'30分' },
+      { key:'bath',    icon:'🛁', name:'お風呂',       time:'22:10', dur:'20分' },
+      { key:'stretch', icon:'🧘', name:'ストレッチ',   time:'22:30', dur:'15分' },
+      { key:'read',    icon:'📖', name:'読書',         time:'22:45', dur:'30分' },
+      { key:'sleep',   icon:'🌙', name:'就寝準備',     time:'23:15', dur:'〜24:00', isSleep:true },
+    ],
+    piano: [
+      { key:'train',   icon:'💪', name:'トレーニング', time:'21:00', dur:'40分' },
+      { key:'bath',    icon:'🛁', name:'お風呂',       time:'21:40', dur:'20分' },
+      { key:'stretch', icon:'🧘', name:'ストレッチ',   time:'22:00', dur:'15分' },
+      { key:'read',    icon:'📖', name:'読書',         time:'22:15', dur:'30分' },
+      { key:'piano',   icon:'🎹', name:'ピアノ',       time:'22:45', dur:'30分' },
+      { key:'sleep',   icon:'🌙', name:'就寝準備',     time:'23:15', dur:'〜24:00', isSleep:true },
+    ],
+  };
+
+  // ── STATE ──
+  const now = new Date();
+  const todayDow = now.getDay(); // 0=Sun
+
+  function dateKey(offset) {
+    const d = new Date(now);
+    d.setDate(d.getDate() + offset);
+    return `night_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+  }
+
+  function getState(key) {
+    try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; }
+  }
+  function saveState(key, obj) {
+    try { localStorage.setItem(key, JSON.stringify(obj)); } catch {}
+  }
+
+  // weekOffset: 0 = today, -1 = yesterday, etc.
+  // But we want Sun-Sat of current week
+  // Let's show Mon-Sun of current week, highlight today
+  // offset from Monday of this week
+  const dayOfWeek = now.getDay(); // 0=Sun
+  // offset to this week's Monday (Mon=0 ... Sun=6)
+  const mondayOffset = (dayOfWeek === 0) ? -6 : -(dayOfWeek - 1);
+
+  let selectedOffset = 0; // offset from today
+
+  // ── INIT ──
+  document.getElementById('dowDisplay').textContent = DAYS_JP[todayDow] + '曜日';
+  document.getElementById('dateDisplay').textContent =
+    `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())}`;
+
+  const todayType = DAY_TYPES[todayDow];
+  document.getElementById('todayIcon').textContent  = TYPE_META[todayType].icon;
+  document.getElementById('todayTitle').textContent = TYPE_META[todayType].label;
+
+  renderWeekStrip();
+  renderTasks();
+
+  // ── WEEK STRIP ──
+  function renderWeekStrip() {
+    const strip = document.getElementById('weekStrip');
+    strip.innerHTML = '';
+    // Show 7 days: Mon to Sun of current week
+    for (let i = 0; i < 7; i++) {
+      const offset = mondayOffset + i; // offset from today
+      const d = new Date(now);
+      d.setDate(d.getDate() + offset);
+      const dow = d.getDay();
+      const type = DAY_TYPES[dow];
+      const icon = TYPE_META[type].icon;
+      const key = `night_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+      const st = getState(key);
+      const tasks = SCHEDULES[type].filter(t => !t.isSleep);
+      const doneCount = tasks.filter(t => st[t.key]).length;
+
+      const isToday = offset === 0;
+      const isSelected = offset === selectedOffset;
+
+      const pill = document.createElement('div');
+      pill.className = `day-pill ${isSelected ? 'active' : ''} ${isToday ? 'today' : ''}`;
+      pill.innerHTML = `
+        <div class="dp-name">${DAYS_JP[dow]}</div>
+        <div class="dp-icon">${icon}</div>
+        <div class="dp-dots">${tasks.map((t,idx) =>
+          `<div class="dp-dot ${st[t.key]?'done':isSelected?'active-day':''}"></div>`
+        ).join('')}</div>
+      `;
+      pill.addEventListener('click', () => {
+        selectedOffset = offset;
+        renderWeekStrip();
+        renderTasks();
+      });
+      strip.appendChild(pill);
+    }
+    // scroll selected into view
+    const active = strip.querySelector('.day-pill.active');
+    if (active) active.scrollIntoView({ inline:'center', block:'nearest', behavior:'smooth' });
+  }
+
+  // ── TASKS ──
+  function renderTasks() {
+    const d = new Date(now);
+    d.setDate(d.getDate() + selectedOffset);
+    const dow = d.getDay();
+    const type = DAY_TYPES[dow];
+    const stKey = `night_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+    const st = getState(stKey);
+    const tasks = SCHEDULES[type];
+    const checkable = tasks.filter(t => !t.isSleep);
+    const doneCount = checkable.filter(t => st[t.key]).length;
+    const total = checkable.length;
+    const pct = total ? (doneCount / total * 100) : 0;
+
+    document.getElementById('progressNum').textContent = doneCount + '/' + total;
+    const fill = document.getElementById('progressFill');
+    fill.style.width = pct + '%';
+    fill.className = 'progress-fill' + (doneCount === total && total > 0 ? ' done-all' : '');
+
+    const banner = document.getElementById('completeBanner');
+    banner.className = 'complete-banner' + (doneCount === total && total > 0 ? ' show' : '');
+
+    const list = document.getElementById('taskList');
+    list.innerHTML = '';
+    tasks.forEach(task => {
+      const isDone = !!st[task.key];
+      const card = document.createElement('div');
+      card.className = `task-card${isDone ? ' done' : ''}${task.isSleep ? ' sleep' : ''}`;
+      card.innerHTML = `
+        <div class="task-check">${isDone ? '✓' : task.isSleep ? task.icon : ''}</div>
+        <div class="task-info">
+          <div class="task-name">${task.icon} ${task.name}</div>
+          <div class="task-meta">${task.time} ・ ${task.dur}</div>
+        </div>
+        <div class="task-status">${task.isSleep ? '' : isDone ? '達成' : 'タップ'}</div>
+      `;
+      if (!task.isSleep) {
+        card.addEventListener('click', () => {
+          st[task.key] = !st[task.key];
+          saveState(stKey, st);
+          renderWeekStrip();
+          renderTasks();
+        });
+      }
+      list.appendChild(card);
+    });
+  }
+
+  function pad(n) { return String(n).padStart(2,'0'); }
+})();
+</script>
+
+<script>
+/* ===== FITLOG ===== */
+(function() {
+
+  // ── DATA ──
+  const DAYS = ['日','月','火','水','木','金','土'];
+
+  const SCHEDULE = {
+    0: { type:'rest',     icon:'🏖',  title:'完全休養・チートデイ',
+         desc:'今日はしっかり休んで回復させましょう。チートデイを楽しんで！' },
+    1: { type:'strength', icon:'💪',  title:'胸・肩・三頭筋',
+         exercises: [
+           { key:'pw',  name:'プッシュアップ（ワイド）',         target:'3セット × 12回' },
+           { key:'sp',  name:'ダンベルショルダープレス',         target:'3セット × 10回' },
+           { key:'sr',  name:'サイドレイズ',                    target:'3セット × 15回' },
+           { key:'dp',  name:'ダイヤモンドプッシュアップ',       target:'3セット × 10回' },
+           { key:'pp',  name:'パイクプッシュアップ',             target:'2セット × 10回' },
+         ]},
+    2: { type:'running',  icon:'🏃',  title:'ランニング',
+         desc:'20〜30分、会話できるゆっくりペースで。21時以降なので激しくしすぎず◎' },
+    3: { type:'strength', icon:'🔙',  title:'背中・二頭筋・体幹',
+         prep:'ストレッチポールで胸椎モビリティを確認してから開始！',
+         exercises: [
+           { key:'br',  name:'ベントオーバーロウ',               target:'3セット × 10回' },
+           { key:'or',  name:'ワンハンドダンベルロウ',           target:'3セット × 12回（左右）' },
+           { key:'bd',  name:'バードドッグ',                    target:'3セット × 10回（左右）' },
+           { key:'db',  name:'デッドバッグ',                    target:'3セット × 10回' },
+           { key:'pl',  name:'プランク',                        target:'3セット × 45秒' },
+           { key:'cu',  name:'ダンベルカール',                   target:'2セット × 12回' },
+         ]},
+    4: { type:'rest',     icon:'😴',  title:'休養日',
+         desc:'筋肉は休んでいる間に育ちます。ストレッチポールでほぐすだけでもOK。' },
+    5: { type:'strength', icon:'🦵',  title:'脚・臀部・腰回り',
+         prep:'ストレッチポールで腸腰筋をほぐしてから開始！（腰痛予防に超重要）',
+         exercises: [
+           { key:'rdl', name:'ルーマニアンデッドリフト',         target:'3セット × 12回' },
+           { key:'bss', name:'ブルガリアンスプリットスクワット', target:'3セット × 10回（左右）' },
+           { key:'ht',  name:'ヒップスラスト',                  target:'3セット × 15回' },
+           { key:'cr',  name:'カーフレイズ',                    target:'3セット × 20回' },
+           { key:'spr', name:'ストレッチポール：腸腰筋リリース', target:'各1分' },
+         ]},
+    6: { type:'running',  icon:'🏃',  title:'ランニング',
+         desc:'20〜30分、ゆっくりペースで。余裕があれば少し距離を伸ばしてOK！' },
+  };
+
+  // ── STATE ──
+  const exState = {};   // key -> 'done'|'failed'|null
+  let runState = null;  // 'done'|'failed'|null
+  let sixpadState = null; // 'yes'|'no'|null
+
+  // ── INIT ──
+  const now = new Date();
+  const dow = now.getDay();
+  const today = SCHEDULE[dow];
+
+  document.getElementById('f_dowDisplay').textContent = DAYS[dow] + '曜日';
+  document.getElementById('f_dateDisplay').textContent =
+    `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())}`;
+  document.getElementById('f_todayIcon').textContent = today.icon;
+  document.getElementById('f_todayTitle').textContent = today.title;
+
+  renderTraining();
+
+  // ── TABS ──
+  function switchTab(t) {
+    const tabs = document.querySelectorAll('.tab');
+    const order = ['morning','meal','training'];
+    tabs.forEach((el,i) => el.classList.toggle('active', order[i]===t));
+    document.getElementById('panel-morning').classList.toggle('active', t==='morning');
+    document.getElementById('panel-meal').classList.toggle('active', t==='meal');
+    document.getElementById('panel-training').classList.toggle('active', t==='training');
+  }
+
+  // ── MEAL LOG ──
+  const MEAL_CATS = [
+    { key:'breakfast', label:'朝食', icon:'🌅' },
+    { key:'lunch',     label:'昼食', icon:'☀️' },
+    { key:'dinner',    label:'夕食', icon:'🌙' },
+    { key:'snack',     label:'間食', icon:'🍪' },
+  ];
+
+  function mealDateKey() {
+    return 'fitlog_meals2_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();
+  }
+  function loadMeals() {
+    try { return JSON.parse(localStorage.getItem(mealDateKey())||'{}'); } catch { return {}; }
+  }
+  function saveMeals(data) {
+    try { localStorage.setItem(mealDateKey(), JSON.stringify(data)); } catch {}
+  }
+
+  function addMealCat(cat) {
+    const name = (document.getElementById('name-'+cat).value||'').trim();
+    const kcal = parseInt(document.getElementById('kcal-input-'+cat).value||'0',10);
+    if (!name) { document.getElementById('name-'+cat).focus(); return; }
+    const data = loadMeals();
+    if (!data[cat]) data[cat] = [];
+    data[cat].push({ id: Date.now(), name, kcal: isNaN(kcal)?0:kcal });
+    saveMeals(data);
+    document.getElementById('name-'+cat).value = '';
+    document.getElementById('kcal-input-'+cat).value = '';
+    renderMeals();
+  }
+
+  function deleteMealItem(cat, id) {
+    const data = loadMeals();
+    data[cat] = (data[cat]||[]).filter(m => m.id !== id);
+    saveMeals(data);
+    renderMeals();
+  }
+
+  // ── カロリーDB ──
+  const KCAL_DB = [
+    // 主食
+    ['白米',168],['ご飯',168],['玄米',165],['おにぎり',185],['食パン',158],
+    ['トースト',158],['パン',200],['フランスパン',130],['うどん',105],['そば',132],
+    ['ラーメン',450],['チャーハン',400],['パスタ',380],['スパゲティ',380],
+    ['カレーライス',650],['親子丼',550],['牛丼',650],['豚丼',600],
+    ['天丼',700],['海鮮丼',500],['チャーシュー麺',500],
+    // 肉類
+    ['鶏むね肉',108],['鶏もも肉',190],['ささみ',98],['サラダチキン',105],
+    ['豚肉',180],['豚バラ',386],['牛肉',250],['牛バラ',371],['ひき肉',200],
+    ['唐揚げ',250],['から揚げ',250],['フライドチキン',300],
+    ['焼き鳥',180],['とんかつ',380],['ハンバーグ',350],['ステーキ',400],
+    ['ソーセージ',160],['ウインナー',160],['ベーコン',160],['ハム',120],
+    // 魚介
+    ['サーモン',138],['鮭',133],['マグロ',125],['ツナ',70],['ツナ缶',70],
+    ['サバ',247],['さば',247],['アジ',126],['エビ',82],['イカ',76],
+    ['タコ',76],['焼き魚',180],['刺身',150],['寿司',300],
+    // 卵・乳製品
+    ['卵',76],['たまご',76],['ゆで卵',76],['目玉焼き',100],['スクランブルエッグ',150],
+    ['チーズ',340],['牛乳',67],['ヨーグルト',62],['無脂肪ヨーグルト',40],
+    // 豆腐・大豆
+    ['豆腐',56],['絹豆腐',56],['木綿豆腐',72],['納豆',200],['枝豆',135],
+    ['豆乳',46],['味噌汁',40],
+    // 野菜
+    ['サラダ',30],['レタス',12],['キャベツ',23],['トマト',19],['きゅうり',14],
+    ['ブロッコリー',33],['ほうれん草',20],['にんじん',41],['玉ねぎ',37],
+    ['じゃがいも',76],['さつまいも',132],['アボカド',187],
+    // 果物
+    ['バナナ',86],['りんご',54],['みかん',46],['オレンジ',46],['ぶどう',59],
+    ['いちご',34],['スイカ',37],['メロン',42],
+    // 加工食品・コンビニ
+    ['プロテインバー',200],['プロテイン',120],['プロテインシェイク',150],
+    ['おにぎり',185],['サンドイッチ',280],['菓子パン',350],
+    ['カップ麺',350],['カップラーメン',350],['インスタントラーメン',350],
+    ['冷凍食品',300],['弁当',600],
+    // スナック・お菓子
+    ['ポテトチップス',540],['クッキー',500],['チョコレート',550],
+    ['アイス',200],['ソフトクリーム',150],['プリン',120],
+    ['ケーキ',350],['シュークリーム',200],
+    // 飲み物
+    ['水',0],['お茶',0],['緑茶',0],['コーヒー',4],['ブラックコーヒー',4],
+    ['カフェラテ',90],['オレンジジュース',112],['野菜ジュース',40],
+    ['コーラ',180],['スポーツドリンク',50],['牛乳',67],
+    ['プロテイン飲料',150],['エナジードリンク',80],
+    ['ザバスヨーグルト',75],['ザバス ヨーグルト',75],['ザバスミルク',207],['ザバス ミルク',207],['ザバスミルクプロテイン',207],['ザバス',150],
+    // 調理品
+    ['味噌汁',40],['スープ',60],['シチュー',250],['カレー',250],
+    ['煮物',120],['炒め物',200],['揚げ物',300],
+    // 外食
+    ['マクドナルド ビッグマック',525],['ビッグマック',525],
+    ['マクドナルド フライドポテト',310],['フライドポテト',310],
+    ['吉野家 牛丼並',652],['すき家 牛丼並',648],
+    ['松屋 牛めし並',636],['サブウェイ',350],
+  ];
+
+  function estimateKcal(query) {
+    const q = query.toLowerCase().replace(/\s/g,'');
+    // 完全一致
+    for (const [food, kcal] of KCAL_DB) {
+      if (food.toLowerCase() === q) return kcal;
+    }
+    // 部分一致（クエリがDBの食品名を含む、またはDBがクエリを含む）
+    let best = null, bestLen = 0;
+    for (const [food, kcal] of KCAL_DB) {
+      const f = food.toLowerCase();
+      if (q.includes(f) || f.includes(q)) {
+        if (food.length > bestLen) { best = kcal; bestLen = food.length; }
+      }
+    }
+    return best;
+  }
+
+  function fetchKcal(cat) {
+    const nameEl = document.getElementById('name-'+cat);
+    const kcalEl = document.getElementById('kcal-input-'+cat);
+    const aiBtn  = document.getElementById('ai-btn-'+cat);
+    const name   = (nameEl.value||'').trim();
+    if (!name) { nameEl.focus(); return; }
+    const result = estimateKcal(name);
+    if (result !== null) {
+      kcalEl.value = result;
+      kcalEl.classList.add('estimated');
+      if (aiBtn) aiBtn.textContent = '✓';
+      setTimeout(()=>{
+        kcalEl.classList.remove('estimated');
+        if (aiBtn) aiBtn.textContent = '⚡';
+      }, 2000);
+    } else {
+      // 見つからなかった場合は点滅してフォーカス
+      kcalEl.placeholder = '手入力してね';
+      kcalEl.focus();
+      if (aiBtn) {
+        aiBtn.textContent = '？';
+        setTimeout(()=> aiBtn.textContent = '⚡', 2000);
+      }
+    }
+  }
+
+  function renderMeals() {
+    const data = loadMeals();
+    let total = 0;
+    MEAL_CATS.forEach(c => {
+      const items = data[c.key] || [];
+      const catKcal = items.reduce((s,m)=>s+(m.kcal||0),0);
+      total += catKcal;
+      document.getElementById('kcal-'+c.key).textContent = catKcal ? catKcal.toLocaleString()+' kcal' : '';
+      const listEl = document.getElementById('list-'+c.key);
+      listEl.innerHTML = items.map(m => `
+        <div class="meal-item">
+          <span class="meal-item-name">${m.name}</span>
+          <span class="meal-item-kcal">${m.kcal ? m.kcal.toLocaleString()+' kcal' : ''}</span>
+          <button class="meal-item-del" onclick="deleteMealItem('${c.key}',${m.id})">✕</button>
+        </div>
+      `).join('');
+    });
+    document.getElementById('totalKcalDisplay').textContent = total.toLocaleString();
+  }
+
+  function copyMeals() {
+    const data = loadMeals();
+    let total = 0;
+    let text = '【'+dateLabel()+'】食事記録\n\n';
+    MEAL_CATS.forEach(c => {
+      const items = data[c.key]||[];
+      if (!items.length) return;
+      text += c.icon+' '+c.label+'\n';
+      items.forEach(m => {
+        text += '  ・'+m.name;
+        if (m.kcal) { text += '（'+m.kcal.toLocaleString()+' kcal）'; total += m.kcal; }
+        text += '\n';
+      });
+    });
+    text += '\n合計：'+total.toLocaleString()+' kcal';
+    send(text, 'btn-meal');
+  }
+
+  // ── SLEEP QUALITY ──
+  let sleepQuality = 0;
+  function setSleepQ(q) {
+    sleepQuality = sleepQuality===q ? 0 : q;
+    document.querySelectorAll('.sq-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.q)===sleepQuality);
+    });
+  }
+
+  renderMeals();
+
+  // ── RENDER TRAINING ──
+  function renderTraining() {
+    const c = document.getElementById('trainingContent');
+
+    if (today.type === 'rest') {
+      c.innerHTML = `
+        <div class="rest-card">
+          <div class="rest-icon">${today.icon}</div>
+          <div class="rest-title">${today.title}</div>
+          <div class="rest-text">${today.desc}</div>
+        </div>`;
+      return;
+    }
+
+    if (today.type === 'running') {
+      c.innerHTML = `
+        <div class="run-card">
+          <div class="run-icon">${today.icon}</div>
+          <div class="run-title">${today.title}</div>
+          <div class="run-desc">${today.desc}</div>
+          <div class="run-btns">
+            <button class="run-btn ${runState==='done'?'yes':''}" onclick="setRun('done')">✅ 完走した</button>
+            <button class="run-btn ${runState==='failed'?'no':''}"  onclick="setRun('failed')">❌ できなかった</button>
+          </div>
+        </div>
+        ${sixpadSection()}
+        <button class="copy-btn ${''}" id="btn-training" onclick="copyTraining()">📋 クロードにコピー</button>`;
+      return;
+    }
+
+    // strength
+    const total = today.exercises.length;
+    const done  = today.exercises.filter(e => exState[e.key]==='done').length;
+    const pct   = total ? (done/total*100) : 0;
+
+    let html = '';
+
+    if (today.prep) html += `<div class="prep-alert">⚡ ${today.prep}</div>`;
+
+    html += `<div class="progress-wrap">
+      <div class="progress-head">
+        <span class="progress-lbl">達成状況</span>
+        <span class="progress-num">${done}/${total}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+
+    today.exercises.forEach(ex => {
+      const s = exState[ex.key] || 'none';
+      const cls = s==='done' ? 'done' : s==='failed' ? 'failed' : '';
+      const chk = s==='done' ? '✓' : s==='failed' ? '✗' : '';
+      const lbl = s==='done' ? '達成' : s==='failed' ? '未達成' : 'タップ';
+      html += `<div class="ex-card ${cls}" onclick="toggleEx('${ex.key}')">
+        <div class="ex-check">${chk}</div>
+        <div class="ex-info">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-target">${ex.target}</div>
+        </div>
+        <div class="ex-status">${lbl}</div>
+      </div>`;
+    });
+
+    html += sixpadSection();
+    html += `<button class="copy-btn" id="btn-training" onclick="copyTraining()">📋 クロードにコピー</button>`;
+    c.innerHTML = html;
+  }
+
+  function sixpadSection() {
+    const yes = sixpadState === 'yes';
+    const no  = sixpadState === 'no';
+    return `<div class="sixpad-card">
+      <div class="sixpad-icon">⚡</div>
+      <div class="sixpad-info">
+        <div class="sixpad-name">シックスパッド</div>
+        <div class="sixpad-sub">体幹・腹筋への使用</div>
+      </div>
+      <div class="sixpad-toggle">
+        <button class="sp-btn ${yes?'yes':''}" onclick="setSixpad('yes')">使用</button>
+        <button class="sp-btn ${no?'no':''}"   onclick="setSixpad('no')">なし</button>
+      </div>
+    </div>`;
+  }
+
+  // ── ACTIONS ──
+  function toggleEx(key) {
+    const s = exState[key] || 'none';
+    exState[key] = s==='none' ? 'done' : s==='done' ? 'failed' : 'none';
+    renderTraining();
+  }
+
+  function setRun(s) {
+    runState = runState===s ? null : s;
+    renderTraining();
+  }
+
+  function setSixpad(s) {
+    sixpadState = sixpadState===s ? null : s;
+    renderTraining();
+  }
+
+  // ── COPY ──
+  function dateLabel() {
+    return `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${DAYS[dow]}）`;
+  }
+
+  function copyMorning() {
+    const sl = val('sleep-hours') || '未記入';
+    const sqLabel = ['','😴 不良','😐 普通','😊 良好','😄 最高'];
+    const sq = sleepQuality ? sqLabel[sleepQuality] : '未記入';
+    const w  = val('weight')   || '未記入';
+    const bf = val('bodyfat')  || '未記入';
+    const br = val('breakfast')|| '未記入';
+    const lu = val('lunch')    || '未記入';
+    const di = val('dinner')   || '未記入';
+    const no = val('notes')    || 'なし';
+
+    send(`【${dateLabel()}】朝の記録
+
+📊 身体データ
+睡眠：${sl}時間（${sq}）\n体重：${w}kg　体脂肪率：${bf}%
+
+🍽 昨日の食事
+朝：${br}
+昼：${lu}
+夜：${di}
+
+💬 気になること
+${no}`, 'btn-morning');
+  }
+
+  function copyTraining() {
+    let text = `【${dateLabel()}】トレーニング記録\n`;
+
+    if (today.type === 'running') {
+      const r = runState==='done' ? '完走 ✅' : runState==='failed' ? 'できなかった ❌' : '未記録';
+      text += `🏃 ランニング：${r}`;
+    } else if (today.type === 'strength') {
+      text += `💪 ${today.title}\n\n`;
+      today.exercises.forEach(ex => {
+        const s = exState[ex.key] || 'none';
+        const m = s==='done' ? '✅' : s==='failed' ? '❌' : '－';
+        text += `${m} ${ex.name}（${ex.target}）\n`;
+      });
+    }
+
+    const sp = sixpadState==='yes' ? '使用 ✅' : sixpadState==='no' ? 'なし' : '未記録';
+    text += `\n⚡ シックスパッド：${sp}`;
+
+    send(text, 'btn-training');
+  }
+
+  function send(text, btnId) {
+    navigator.clipboard.writeText(text).then(() => flash(btnId))
+      .catch(() => {
+        const ta = Object.assign(document.createElement('textarea'),
+          { value: text, style: 'position:fixed;opacity:0' });
+        document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+        flash(btnId);
+      });
+  }
+
+  function flash(id) {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ コピーしました！';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('ok'); }, 2000);
+  }
+
+  function val(id) { return (document.getElementById(id)||{}).value||''; }
+  function pad(n)  { return String(n).padStart(2,'0'); }
+
+})();
+</script>
+
+</body>
+</html>
