@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
 
-    /* ============================================================
-       RESET & ROOT (1回だけ)
-    ============================================================ */
     :root {
       --bg:           #08080F;
       --bg-card:      #10101A;
@@ -35,6 +32,13 @@
       --font-b:       'Noto Sans JP', sans-serif;
     }
 
+    html {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+
     * {
       margin: 0; padding: 0;
       box-sizing: border-box;
@@ -45,14 +49,14 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-b);
+      width: 100%;
+      max-width: 100%;
       min-height: 100vh;
       min-height: 100dvh;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* ============================================================
-       BOTTOM NAV (共通)
-    ============================================================ */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: var(--bg-card);
@@ -72,15 +76,9 @@
     .nav-btn.active .nav-label { color: var(--accent); }
     .nav-btn.active .nav-icon  { transform: scale(1.1); }
 
-    /* ============================================================
-       APP PANELS
-    ============================================================ */
-    .app-panel { display: none; padding-bottom: 80px; }
+    .app-panel { display: none; padding-bottom: 80px; width: 100%; max-width: 100%; overflow-x: hidden; }
     .app-panel.active { display: block; }
 
-    /* ============================================================
-       HEADER (共通ベース)
-    ============================================================ */
     .header {
       padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px 0;
       position: relative;
@@ -96,7 +94,6 @@
     .date-dow  { font-size: 11px; color: var(--accent); letter-spacing: 1px; }
     .date-full { font-family: var(--font-d); font-size: 24px; letter-spacing: 1px; line-height: 1.2; color: var(--accent); }
 
-    /* NIGHT ヘッダー固有 */
     #panel-night .header::after {
       background: radial-gradient(ellipse at 50% -20%, rgba(99,102,241,0.14) 0%, transparent 70%);
     }
@@ -105,7 +102,6 @@
       color: var(--indigo); line-height: 1;
     }
 
-    /* FITLOG ヘッダー固有 */
     #panel-fitlog .header::after {
       background: radial-gradient(ellipse at 50% -20%, rgba(255,85,0,0.12) 0%, transparent 70%);
     }
@@ -114,9 +110,6 @@
       color: var(--accent); line-height: 1;
     }
 
-    /* ============================================================
-       TODAY BADGE (共通ベース)
-    ============================================================ */
     .today-badge {
       margin-top: 14px;
       display: flex; align-items: center; gap: 12px;
@@ -130,12 +123,12 @@
     #panel-night  .today-badge { background: var(--indigo-glow); border: 1px solid var(--indigo-border); }
     #panel-fitlog .today-badge { background: var(--accent-glow); border: 1px solid var(--accent-border); }
 
-    /* ============================================================
-       CONTENT / SECTION (共通)
-    ============================================================ */
     .content {
       padding: 16px 20px;
       padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
     }
     .sec-label {
       font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
@@ -143,9 +136,6 @@
     }
     .section { margin-bottom: 22px; }
 
-    /* ============================================================
-       PROGRESS (共通ベース、色はスコープで上書き)
-    ============================================================ */
     .progress-wrap {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px;
@@ -159,13 +149,9 @@
     #panel-night  .progress-num  { color: var(--indigo); }
     #panel-night  .progress-fill { background: linear-gradient(90deg, var(--indigo), #A5B4FC); }
     #panel-night  .progress-fill.done-all { background: linear-gradient(90deg, var(--success), #4ADE80); }
-
     #panel-fitlog .progress-num  { color: var(--accent); }
     #panel-fitlog .progress-fill { background: linear-gradient(90deg, var(--accent), #FF8844); }
 
-    /* ============================================================
-       COPY BUTTON (共通)
-    ============================================================ */
     .copy-btn {
       width: 100%; padding: 17px;
       background: var(--accent); color: white; border: none;
@@ -178,13 +164,11 @@
     .copy-btn:active { transform: scale(0.98); opacity: 0.9; }
     .copy-btn.ok     { background: var(--success); box-shadow: 0 6px 30px rgba(34,197,94,0.35); }
 
-    /* ============================================================
-       NIGHT — 週間ストリップ
-    ============================================================ */
     .week-strip {
       display: flex; gap: 6px;
       margin: 16px 20px 0;
       overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      max-width: calc(100% - 40px);
     }
     .week-strip::-webkit-scrollbar { display: none; }
     .day-pill {
@@ -204,9 +188,6 @@
     .dp-dot.done       { background: var(--success); }
     .dp-dot.active-day { background: var(--indigo); }
 
-    /* ============================================================
-       NIGHT — タスクカード
-    ============================================================ */
     .task-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
@@ -231,13 +212,9 @@
     .task-name { font-size: 14px; font-weight: 500; color: var(--text); }
     .task-meta { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
     .task-card.done .task-name { color: var(--success); }
-
     .task-status { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); flex-shrink: 0; }
     .task-card.done .task-status { color: var(--success); }
 
-    /* ============================================================
-       NIGHT — 完了バナー
-    ============================================================ */
     .complete-banner {
       display: none;
       background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.35);
@@ -248,9 +225,6 @@
     .complete-banner-text    { font-size: 14px; font-weight: 700; color: var(--success); }
     .complete-banner-sub     { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
 
-    /* ============================================================
-       FITLOG — タブ
-    ============================================================ */
     .tabs {
       display: flex; margin: 16px 20px 0;
       background: var(--bg-card); border: 1px solid var(--border);
@@ -266,9 +240,6 @@
     .tab-panel         { display: none; }
     .tab-panel.active  { display: block; }
 
-    /* ============================================================
-       FITLOG — メトリクス
-    ============================================================ */
     .metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 14px; }
     .metric-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
@@ -280,9 +251,6 @@
     }
     .metric-unit { font-size: 14px; color: var(--text-dim); flex-shrink: 0; }
 
-    /* ============================================================
-       FITLOG — 睡眠の質ボタン
-    ============================================================ */
     .sq-btn {
       flex: 1; padding: 6px 4px; background: var(--bg-input);
       border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -290,9 +258,6 @@
     }
     .sq-btn.active { border-color: var(--accent); background: var(--accent-glow); }
 
-    /* ============================================================
-       FITLOG — メモ
-    ============================================================ */
     .note-card  { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
     .note-input {
       width: 100%; background: none; border: none; outline: none;
@@ -300,9 +265,6 @@
     }
     .note-input::placeholder { color: var(--text-muted); }
 
-    /* ============================================================
-       FITLOG — 食事カード
-    ============================================================ */
     .meal-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
     .meal-label { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
     .meal-input { width: 100%; background: none; border: none; outline: none; color: var(--text); font-family: var(--font-b); font-size: 14px; resize: none; line-height: 1.7; }
@@ -343,18 +305,12 @@
     .meal-item-kcal { color: var(--text-dim); font-size: 12px; flex-shrink: 0; }
     .meal-item-del  { background: none; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
 
-    /* ============================================================
-       FITLOG — PREP ALERT
-    ============================================================ */
     .prep-alert {
       background: var(--accent-glow); border: 1px solid var(--accent-border);
       border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 14px;
       font-size: 12px; color: #FF8844; line-height: 1.5;
     }
 
-    /* ============================================================
-       FITLOG — エクササイズカード
-    ============================================================ */
     .ex-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 15px 16px; margin-bottom: 10px;
@@ -378,14 +334,10 @@
     .ex-info { flex: 1; min-width: 0; }
     .ex-name { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ex-target { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
-
     .ex-status { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); flex-shrink: 0; }
     .ex-card.done   .ex-status { color: var(--success); }
     .ex-card.failed .ex-status { color: var(--danger); }
 
-    /* ============================================================
-       FITLOG — シックスパッド
-    ============================================================ */
     .sixpad-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 15px 16px; margin-bottom: 10px;
@@ -410,9 +362,6 @@
     .sp-btn.yes { background: rgba(34,197,94,0.2); color: var(--success); }
     .sp-btn.no  { background: rgba(239,68,68,0.2);  color: var(--danger); }
 
-    /* ============================================================
-       FITLOG — 休養 / ランニングカード
-    ============================================================ */
     .rest-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 50px 20px; text-align: center;
@@ -441,9 +390,6 @@
 </head>
 <body>
 
-<!-- ============================================================
-     BOTTOM NAV
-============================================================ -->
 <div class="bottom-nav">
   <button class="nav-btn active" id="nav-night" onclick="window.switchApp('night')">
     <span class="nav-icon">🌙</span>
@@ -455,11 +401,7 @@
   </button>
 </div>
 
-<!-- ============================================================
-     NIGHT PANEL
-============================================================ -->
 <div class="app-panel active" id="panel-night">
-
   <div class="header">
     <div class="header-row">
       <div>
@@ -488,7 +430,6 @@
       <div class="complete-banner-text">今夜のルーティン完了！</div>
       <div class="complete-banner-sub">お疲れ様でした。ゆっくり休んでください。</div>
     </div>
-
     <div class="progress-wrap">
       <div class="progress-head">
         <span class="progress-lbl">今夜の達成状況</span>
@@ -498,20 +439,14 @@
         <div class="progress-fill" id="n-progressFill" style="width:0%"></div>
       </div>
     </div>
-
     <div class="section">
       <div class="sec-label">タイムライン</div>
       <div id="n-taskList"></div>
     </div>
   </div>
-
 </div>
 
-<!-- ============================================================
-     FITLOG PANEL
-============================================================ -->
 <div class="app-panel" id="panel-fitlog">
-
   <div class="header">
     <div class="header-row">
       <div>
@@ -540,9 +475,7 @@
 
   <div class="content">
 
-    <!-- 朝の記録タブ -->
     <div id="f-panel-morning" class="tab-panel active">
-
       <div class="section">
         <div class="sec-label">身体データ</div>
         <div class="metrics-row">
@@ -591,14 +524,11 @@
           <textarea class="note-input" id="f-notes" placeholder="体調、腰の状態、気になることなど..." rows="3"></textarea>
         </div>
       </div>
-
       <button class="copy-btn" id="f-btn-morning" onclick="window.copyMorning()">📋 クロードにコピー</button>
     </div>
 
-    <!-- 食事タブ -->
     <div id="f-panel-meal" class="tab-panel">
       <div class="section">
-
         <div class="metric-card" style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;">
           <div>
             <div class="metric-label">今日の合計カロリー</div>
@@ -610,7 +540,6 @@
           <div style="font-size:36px;">🔥</div>
         </div>
 
-        <!-- 朝食 -->
         <div class="meal-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div class="meal-label" style="margin:0;">🌅 朝食</div>
@@ -625,7 +554,6 @@
           </div>
         </div>
 
-        <!-- 昼食 -->
         <div class="meal-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div class="meal-label" style="margin:0;">☀️ 昼食</div>
@@ -640,7 +568,6 @@
           </div>
         </div>
 
-        <!-- 夕食 -->
         <div class="meal-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div class="meal-label" style="margin:0;">🌙 夕食</div>
@@ -655,7 +582,6 @@
           </div>
         </div>
 
-        <!-- 間食 -->
         <div class="meal-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div class="meal-label" style="margin:0;">🍪 間食</div>
@@ -669,12 +595,10 @@
             <button class="meal-add-btn" onclick="window.addMealCat('snack')">＋</button>
           </div>
         </div>
-
       </div>
       <button class="copy-btn" id="f-btn-meal" onclick="window.copyMeals()">📋 クロードにコピー</button>
     </div>
 
-    <!-- トレーニングタブ -->
     <div id="f-panel-training" class="tab-panel">
       <div id="f-trainingContent"></div>
     </div>
@@ -682,10 +606,6 @@
   </div>
 </div>
 
-
-<!-- ============================================================
-     SCRIPT: switchApp
-============================================================ -->
 <script>
 (function () {
   function switchApp(app) {
@@ -698,10 +618,6 @@
 })();
 </script>
 
-
-<!-- ============================================================
-     SCRIPT: NIGHT
-============================================================ -->
 <script>
 (function () {
 
@@ -857,10 +773,6 @@
 })();
 </script>
 
-
-<!-- ============================================================
-     SCRIPT: FITLOG
-============================================================ -->
 <script>
 (function () {
 
@@ -924,7 +836,6 @@
   document.getElementById('f-todayIcon').textContent   = today.icon;
   document.getElementById('f-todayTitle').textContent  = today.title;
 
-  /* ---- TAB ---- */
   function switchTab(t) {
     var tabs  = document.querySelectorAll('#panel-fitlog .tab');
     var order = ['morning','meal','training'];
@@ -934,7 +845,6 @@
     });
   }
 
-  /* ---- SLEEP QUALITY ---- */
   function setSleepQ(q) {
     sleepQuality = (sleepQuality === q) ? 0 : q;
     document.querySelectorAll('.sq-btn').forEach(function(btn) {
@@ -942,7 +852,6 @@
     });
   }
 
-  /* ---- MEAL DATA ---- */
   var MEAL_CATS = [
     { key:'breakfast', label:'朝食', icon:'🌅' },
     { key:'lunch',     label:'昼食', icon:'☀️' },
@@ -976,7 +885,6 @@
     renderMeals();
   }
 
-  /* ---- カロリーDB ---- */
   var KCAL_DB = [
     ['白米',168],['ご飯',168],['玄米',165],['おにぎり',185],['食パン',158],
     ['トースト',158],['パン',200],['フランスパン',130],['うどん',105],['そば',132],
@@ -1083,17 +991,15 @@
     if (disp) disp.textContent = total.toLocaleString();
   }
 
-  /* ---- TRAINING ---- */
   function renderTraining() {
     var c = document.getElementById('f-trainingContent');
     if (!c) return;
 
     if (today.type === 'rest') {
-      c.innerHTML =
-        '<div class="rest-card">' +
-          '<div class="rest-icon">'  + today.icon  + '</div>' +
-          '<div class="rest-title">' + today.title + '</div>' +
-          '<div class="rest-text">'  + today.desc  + '</div>' +
+      c.innerHTML = '<div class="rest-card">' +
+        '<div class="rest-icon">'  + today.icon  + '</div>' +
+        '<div class="rest-title">' + today.title + '</div>' +
+        '<div class="rest-text">'  + today.desc  + '</div>' +
         '</div>';
       return;
     }
@@ -1121,13 +1027,12 @@
 
     if (today.prep) html += '<div class="prep-alert">⚡ ' + today.prep + '</div>';
 
-    html +=
-      '<div class="progress-wrap">' +
-        '<div class="progress-head">' +
-          '<span class="progress-lbl">達成状況</span>' +
-          '<span class="progress-num">' + done + '/' + total + '</span>' +
-        '</div>' +
-        '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+    html += '<div class="progress-wrap">' +
+      '<div class="progress-head">' +
+        '<span class="progress-lbl">達成状況</span>' +
+        '<span class="progress-num">' + done + '/' + total + '</span>' +
+      '</div>' +
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
       '</div>';
 
     today.exercises.forEach(function(ex) {
@@ -1135,14 +1040,13 @@
       var cls = s==='done' ? 'done' : s==='failed' ? 'failed' : '';
       var chk = s==='done' ? '✓'   : s==='failed' ? '✗'      : '';
       var lbl = s==='done' ? '達成' : s==='failed' ? '未達成'  : 'タップ';
-      html +=
-        '<div class="ex-card ' + cls + '" onclick="window.toggleEx(\'' + ex.key + '\')">' +
-          '<div class="ex-check">' + chk + '</div>' +
-          '<div class="ex-info">' +
-            '<div class="ex-name">'   + ex.name   + '</div>' +
-            '<div class="ex-target">' + ex.target + '</div>' +
-          '</div>' +
-          '<div class="ex-status">' + lbl + '</div>' +
+      html += '<div class="ex-card ' + cls + '" onclick="window.toggleEx(\'' + ex.key + '\')">' +
+        '<div class="ex-check">' + chk + '</div>' +
+        '<div class="ex-info">' +
+          '<div class="ex-name">'   + ex.name   + '</div>' +
+          '<div class="ex-target">' + ex.target + '</div>' +
+        '</div>' +
+        '<div class="ex-status">' + lbl + '</div>' +
         '</div>';
     });
 
@@ -1162,10 +1066,9 @@
         '<button class="sp-btn ' + (sixpadState==='yes' ? 'yes' : '') + '" onclick="window.setSixpad(\'yes\')">使用</button>' +
         '<button class="sp-btn ' + (sixpadState==='no'  ? 'no'  : '') + '" onclick="window.setSixpad(\'no\')">なし</button>' +
       '</div>' +
-    '</div>';
+      '</div>';
   }
 
-  /* ---- ACTIONS ---- */
   function toggleEx(key) {
     var s = exState[key] || 'none';
     exState[key] = s==='none' ? 'done' : s==='done' ? 'failed' : 'none';
@@ -1180,23 +1083,18 @@
     renderTraining();
   }
 
-  /* ---- COPY ---- */
   function send(text, btnId) {
     var fallback = function() {
       var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.cssText = 'position:fixed;opacity:0;';
-      document.body.appendChild(ta);
-      ta.select();
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;';
+      document.body.appendChild(ta); ta.select();
       try { document.execCommand('copy'); } catch(e) {}
       document.body.removeChild(ta);
       flash(btnId);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function() { flash(btnId); }).catch(fallback);
-    } else {
-      fallback();
-    }
+    } else { fallback(); }
   }
 
   function flash(id) {
@@ -1219,7 +1117,7 @@
       '【' + dateLabel() + '】朝の記録\n\n' +
       '📊 身体データ\n' +
       '睡眠：' + sl + '時間（' + sq + '）\n' +
-      '体重：' + w  + 'kg　体脂肪率：' + bf + '%\n\n' +
+      '体重：' + w + 'kg　体脂肪率：' + bf + '%\n\n' +
       '💬 気になること\n' + no,
       'f-btn-morning'
     );
@@ -1261,11 +1159,9 @@
     send(text, 'f-btn-training');
   }
 
-  /* ---- 初期化 ---- */
   renderTraining();
   renderMeals();
 
-  /* ---- window 登録 ---- */
   window.switchTab      = switchTab;
   window.setSleepQ      = setSleepQ;
   window.copyMorning    = copyMorning;
