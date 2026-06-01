@@ -55,7 +55,7 @@
       padding: calc(env(safe-area-inset-top,20px) + 28px) 22px 22px;
       border-bottom: 1px solid var(--border);
     }
-    .header-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .header-top { display:flex; align-items:flex-start; justify-content:space-between; }
     .date-num {
       font-family: var(--font-d);
       font-size: 40px;
@@ -71,7 +71,7 @@
       font-weight: 600;
       margin-top: 5px;
     }
-    .today-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+    .today-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:14px; }
     .today-tag {
       background: rgba(255,85,0,0.08);
       border: 1px solid rgba(255,85,0,0.2);
@@ -91,7 +91,7 @@
       font-weight: 600;
       margin-bottom: 13px;
     }
-    .measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .measure-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .measure-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -105,7 +105,7 @@
       text-transform: uppercase;
       margin-bottom: 10px;
     }
-    .measure-row { display: flex; align-items: baseline; gap: 4px; }
+    .measure-row { display:flex; align-items:baseline; gap:4px; }
     .measure-input {
       background: none;
       border: none;
@@ -118,8 +118,8 @@
       -webkit-appearance: none;
     }
     .measure-input::placeholder { color: var(--muted); }
-    .measure-unit { font-size: 13px; color: var(--dim); }
-    .routine-stack { display: flex; flex-direction: column; gap: 9px; }
+    .measure-unit { font-size:13px; color:var(--dim); }
+    .routine-stack { display:flex; flex-direction:column; gap:9px; }
     .routine-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -133,23 +133,23 @@
       user-select: none;
       -webkit-user-select: none;
     }
-    .routine-card:active { opacity: 0.85; }
-    .routine-card.done { border-color: var(--done-border); background: var(--done-bg); }
-    .routine-left { display: flex; align-items: center; gap: 13px; }
-    .r-icon { font-size: 22px; width: 30px; text-align: center; }
-    .r-label { font-size: 16px; font-weight: 500; letter-spacing: 0.3px; transition: color 0.2s; }
-    .routine-card.done .r-label { color: var(--done); }
+    .routine-card:active { opacity:0.85; }
+    .routine-card.done { border-color:var(--done-border); background:var(--done-bg); }
+    .routine-left { display:flex; align-items:center; gap:13px; }
+    .r-icon { font-size:22px; width:30px; text-align:center; }
+    .r-label { font-size:16px; font-weight:500; letter-spacing:0.3px; transition:color 0.2s; }
+    .routine-card.done .r-label { color:var(--done); }
     .check {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      border: 2px solid var(--muted);
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
+      width:26px; height:26px;
+      border-radius:50%;
+      border:2px solid var(--muted);
+      display:flex; align-items:center; justify-content:center;
+      transition:all 0.2s;
+      flex-shrink:0;
     }
-    .routine-card.done .check { background: var(--done); border-color: var(--done); }
-    .check svg { opacity: 0; transition: opacity 0.2s; }
-    .routine-card.done .check svg { opacity: 1; }
+    .routine-card.done .check { background:var(--done); border-color:var(--done); }
+    .check svg { opacity:0; transition:opacity 0.2s; }
+    .routine-card.done .check svg { opacity:1; }
     .rest {
       background: var(--card);
       border: 1px solid var(--border);
@@ -160,7 +160,7 @@
       font-size: 14px;
       letter-spacing: 0.5px;
     }
-    .food-stack { display: flex; flex-direction: column; gap: 9px; }
+    .food-stack { display:flex; flex-direction:column; gap:9px; }
     .food-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -170,7 +170,7 @@
       align-items: center;
       gap: 14px;
     }
-    .food-tag { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--accent); width: 18px; flex-shrink: 0; }
+    .food-tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--accent); width:18px; flex-shrink:0; }
     .food-input {
       background: none;
       border: none;
@@ -180,7 +180,34 @@
       flex: 1;
       outline: none;
     }
-    .food-input::placeholder { color: var(--muted); }
+    .food-input::placeholder { color:var(--muted); }
+    .kcal-input {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-family: var(--font-d);
+      font-size: 20px;
+      letter-spacing: 1px;
+      width: 64px;
+      outline: none;
+      text-align: right;
+      -webkit-appearance: none;
+      flex-shrink: 0;
+    }
+    .kcal-input::placeholder { color:var(--muted); }
+    .kcal-unit { font-size:10px; color:var(--dim); flex-shrink:0; }
+    .calorie-total {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .calorie-label { font-size:11px; letter-spacing:2px; color:var(--dim); text-transform:uppercase; }
+    .calorie-num { font-family:var(--font-d); font-size:28px; letter-spacing:1px; color:var(--accent); }
+    .calorie-num span { font-size:13px; color:var(--dim); margin-left:3px; }
     .send-btn {
       display: block;
       margin: 24px 22px 0;
@@ -197,8 +224,8 @@
       cursor: pointer;
       transition: opacity 0.15s, background 0.2s;
     }
-    .send-btn:active { opacity: 0.82; }
-    .send-btn.ok { background: var(--done); }
+    .send-btn:active { opacity:0.82; }
+    .send-btn.ok { background:var(--done); }
   </style>
 </head>
 <body>
@@ -240,15 +267,25 @@
     <div class="food-stack">
       <div class="food-card">
         <span class="food-tag">朝</span>
-        <input class="food-input" id="f-am" type="text" placeholder="例：納豆ご飯、味噌汁">
+        <input class="food-input" id="f-am" type="text" placeholder="例：納豆ご飯">
+        <input class="kcal-input" id="k-am" type="number" inputmode="numeric" placeholder="—">
+        <span class="kcal-unit">kcal</span>
       </div>
       <div class="food-card">
         <span class="food-tag">昼</span>
         <input class="food-input" id="f-pm" type="text" placeholder="例：定食、ランチ">
+        <input class="kcal-input" id="k-pm" type="number" inputmode="numeric" placeholder="—">
+        <span class="kcal-unit">kcal</span>
       </div>
       <div class="food-card">
         <span class="food-tag">夜</span>
         <input class="food-input" id="f-ev" type="text" placeholder="例：自炊、外食">
+        <input class="kcal-input" id="k-ev" type="number" inputmode="numeric" placeholder="—">
+        <span class="kcal-unit">kcal</span>
+      </div>
+      <div class="calorie-total">
+        <span class="calorie-label">合計</span>
+        <div class="calorie-num" id="kcalTotal">0<span>kcal</span></div>
       </div>
     </div>
   </div>
@@ -314,19 +351,34 @@
     });
   }
 
+  ['k-am','k-pm','k-ev'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateKcal);
+  });
+  function updateKcal() {
+    const total = ['k-am','k-pm','k-ev'].reduce((sum, id) => {
+      return sum + (parseFloat(document.getElementById(id).value) || 0);
+    }, 0);
+    document.getElementById('kcalTotal').innerHTML = `${total}<span>kcal</span>`;
+  }
+
   function copyReport() {
-    const w  = document.getElementById('weight').value;
-    const f  = document.getElementById('fat').value;
-    const am = document.getElementById('f-am').value;
-    const pm = document.getElementById('f-pm').value;
-    const ev = document.getElementById('f-ev').value;
+    const w   = document.getElementById('weight').value;
+    const f   = document.getElementById('fat').value;
+    const am  = document.getElementById('f-am').value;
+    const pm  = document.getElementById('f-pm').value;
+    const ev  = document.getElementById('f-ev').value;
+    const kam = document.getElementById('k-am').value;
+    const kpm = document.getElementById('k-pm').value;
+    const kev = document.getElementById('k-ev').value;
+    const ktotal = (parseFloat(kam)||0)+(parseFloat(kpm)||0)+(parseFloat(kev)||0);
 
     let t = `📅 ${y}/${mo}/${da}（${DAYS_SHORT[dow]}）\n\n`;
     t += `⚖️ 体重：${w||'未'}kg　体脂肪：${f||'未'}%\n\n`;
     t += `🍽️ 食事\n`;
-    t += `　朝：${am||'未'}\n`;
-    t += `　昼：${pm||'未'}\n`;
-    t += `　夜：${ev||'未'}\n`;
+    t += `　朝：${am||'未'}　${kam?kam+'kcal':''}\n`;
+    t += `　昼：${pm||'未'}　${kpm?kpm+'kcal':''}\n`;
+    t += `　夜：${ev||'未'}　${kev?kev+'kcal':''}\n`;
+    if (ktotal > 0) t += `　合計：${ktotal}kcal\n`;
     if (todayActs.length > 0) {
       t += `\n🗒️ ルーティン\n`;
       todayActs.forEach(a => {
