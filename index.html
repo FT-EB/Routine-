@@ -208,22 +208,21 @@ const dow = now.getDay();
 const y  = now.getFullYear();
 const mo = String(now.getMonth()+1).padStart(2,'0');
 const da = String(now.getDate()).padStart(2,'0');
-document.getElementById('dNum').textContent = `${y}.${mo}.${da}`;
-document.getElementById('dDay').textContent = DAYJA[dow];
-
-const todayActs = ACT.filter(a => a.days.includes(dow));
-const state = {};
-
-const tagsEl = document.getElementById('tags');
-todayActs.forEach(a => {
-  const t = document.createElement('span');
-  t.className = 'tag'; t.textContent = a.label;
-  tagsEl.appendChild(t);
-});
-
-const rList = document.getElementById('rList');
-if (!todayActs.length) {
-  rList.innerHTML = '<div class="rest">今日はルーティンなし — ゆっくり休もう</div>';
+function guessKcal(name) {
+  if (!name) return null;
+  // 複数食材を区切り文字で分割
+  const parts = name.split(/[、，,・\/＋+\s　]+/).filter(p => p.trim());
+  const sorted = [...KCAL_DB].sort((a,b) => b.keys[0].length - a.keys[0].length);
+  let total = 0, matched = 0;
+  parts.forEach(part => {
+    const p = part.trim();
+    if (!p) return;
+    for (const row of sorted) {
+      if (row.keys.some(k => p.includes(k))) { total += row.v; matched++; break; }
+    }
+  });
+  return matched > 0 ? total : null;
+}  rList.innerHTML = '<div class="rest">今日はルーティンなし — ゆっくり休もう</div>';
 } else {
   todayActs.forEach(act => {
     state[act.key] = false;
