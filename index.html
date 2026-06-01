@@ -10,401 +10,294 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #08080F;
-      --card: #0F0F1A;
-      --border: #1C1C2E;
-      --accent: #FF5500;
-      --text: #EEEEF8;
-      --dim: #6666AA;
-      --muted: #2A2A3E;
-      --done: #22C55E;
-      --done-bg: rgba(34,197,94,0.07);
-      --done-border: rgba(34,197,94,0.3);
-      --font-d: 'Bebas Neue', sans-serif;
-      --font-b: 'Noto Sans JP', sans-serif;
+      --bg:#08080F; --card:#0F0F1A; --border:#1C1C2E;
+      --accent:#FF5500; --text:#EEEEF8; --dim:#6666AA;
+      --muted:#2A2A3E; --done:#22C55E;
+      --done-bg:rgba(34,197,94,0.07); --done-border:rgba(34,197,94,0.3);
+      --fd:'Bebas Neue',sans-serif; --fb:'Noto Sans JP',sans-serif;
     }
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-b);
-      min-height: 100dvh;
-      padding-bottom: 50px;
-      position: relative;
-      overflow-x: hidden;
-    }
-    body::before {
-      content:'';
-      position:fixed;
-      inset:0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events:none;
-      z-index:0;
-      opacity:0.6;
-    }
-    body::after {
-      content:'';
-      position:fixed;
-      top:0; left:0; right:0;
-      height:3px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      z-index:1;
-    }
-    .container { position:relative; z-index:1; }
-    .header {
-      padding: calc(env(safe-area-inset-top,20px) + 28px) 22px 22px;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-top { display:flex; align-items:flex-start; justify-content:space-between; }
-    .date-num {
-      font-family: var(--font-d);
-      font-size: 40px;
-      letter-spacing: 2px;
-      line-height: 1;
-      color: var(--text);
-    }
-    .date-day {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
-      margin-top: 5px;
-    }
-    .today-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:14px; }
-    .today-tag {
-      background: rgba(255,85,0,0.08);
-      border: 1px solid rgba(255,85,0,0.2);
-      color: var(--accent);
-      border-radius: 20px;
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .section { padding: 22px 22px 0; }
-    .section-label {
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--dim);
-      font-weight: 600;
-      margin-bottom: 13px;
-    }
-    .measure-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .measure-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-    .measure-name {
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--dim);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .measure-row { display:flex; align-items:baseline; gap:4px; }
-    .measure-input {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-family: var(--font-d);
-      font-size: 34px;
-      letter-spacing: 1px;
-      width: 90px;
-      outline: none;
-      -webkit-appearance: none;
-    }
-    .measure-input::placeholder { color: var(--muted); }
-    .measure-unit { font-size:13px; color:var(--dim); }
-    .routine-stack { display:flex; flex-direction:column; gap:9px; }
-    .routine-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 17px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    .routine-card:active { opacity:0.85; }
-    .routine-card.done { border-color:var(--done-border); background:var(--done-bg); }
-    .routine-left { display:flex; align-items:center; gap:13px; }
-    .r-icon { font-size:22px; width:30px; text-align:center; }
-    .r-label { font-size:16px; font-weight:500; letter-spacing:0.3px; transition:color 0.2s; }
-    .routine-card.done .r-label { color:var(--done); }
-    .check {
-      width:26px; height:26px;
-      border-radius:50%;
-      border:2px solid var(--muted);
-      display:flex; align-items:center; justify-content:center;
-      transition:all 0.2s;
-      flex-shrink:0;
-    }
-    .routine-card.done .check { background:var(--done); border-color:var(--done); }
-    .check svg { opacity:0; transition:opacity 0.2s; }
-    .routine-card.done .check svg { opacity:1; }
-    .rest {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-      text-align: center;
-      color: var(--dim);
-      font-size: 14px;
-      letter-spacing: 0.5px;
-    }
-    .food-stack { display:flex; flex-direction:column; gap:9px; }
-    .food-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .food-tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--accent); width:18px; flex-shrink:0; }
-    .food-input {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 15px;
-      font-family: var(--font-b);
-      flex: 1;
-      outline: none;
-    }
-    .food-input::placeholder { color:var(--muted); }
-    .kcal-input {
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-family: var(--font-d);
-      font-size: 20px;
-      letter-spacing: 1px;
-      width: 64px;
-      outline: none;
-      text-align: right;
-      -webkit-appearance: none;
-      flex-shrink: 0;
-    }
-    .kcal-input::placeholder { color:var(--muted); }
-    .kcal-unit { font-size:10px; color:var(--dim); flex-shrink:0; }
-    .calorie-total {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .calorie-label { font-size:11px; letter-spacing:2px; color:var(--dim); text-transform:uppercase; }
-    .calorie-num { font-family:var(--font-d); font-size:28px; letter-spacing:1px; color:var(--accent); }
-    .calorie-num span { font-size:13px; color:var(--dim); margin-left:3px; }
-    .send-btn {
-      display: block;
-      margin: 24px 22px 0;
-      width: calc(100% - 44px);
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 18px;
-      font-family: var(--font-b);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: opacity 0.15s, background 0.2s;
-    }
-    .send-btn:active { opacity:0.82; }
-    .send-btn.ok { background:var(--done); }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body{background:var(--bg);color:var(--text);font-family:var(--fb);
+      min-height:100dvh;padding-bottom:40px;position:relative;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+    body::after{content:'';position:fixed;top:0;left:0;right:0;height:3px;z-index:1;
+      background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+    .wrap{position:relative;z-index:1;}
+    .hdr{padding:calc(env(safe-area-inset-top,16px) + 16px) 18px 14px;border-bottom:1px solid var(--border);}
+    .hdr-date{font-family:var(--fd);font-size:34px;letter-spacing:2px;line-height:1;}
+    .hdr-day{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-top:4px;}
+    .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+    .tag{background:rgba(255,85,0,0.08);border:1px solid rgba(255,85,0,0.2);color:var(--accent);
+      border-radius:20px;padding:2px 9px;font-size:10px;font-weight:600;letter-spacing:0.5px;}
+    .sec{padding:14px 18px 0;}
+    .sec-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:10px;}
+    .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .m-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
+    .m-name{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+    .m-row{display:flex;align-items:baseline;gap:4px;}
+    .m-in{background:none;border:none;color:var(--text);font-family:var(--fd);font-size:30px;
+      letter-spacing:1px;width:80px;outline:none;-webkit-appearance:none;}
+    .m-in::placeholder{color:var(--muted);}
+    .m-unit{font-size:12px;color:var(--dim);}
+    .r-stack{display:flex;flex-direction:column;gap:7px;}
+    .r-card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+      padding:13px 16px;display:flex;align-items:center;justify-content:space-between;
+      cursor:pointer;transition:border-color .2s,background .2s;user-select:none;-webkit-user-select:none;}
+    .r-card:active{opacity:.85;}
+    .r-card.done{border-color:var(--done-border);background:var(--done-bg);}
+    .r-left{display:flex;align-items:center;gap:12px;}
+    .r-ico{font-size:20px;width:26px;text-align:center;}
+    .r-lbl{font-size:15px;font-weight:500;transition:color .2s;}
+    .r-card.done .r-lbl{color:var(--done);}
+    .chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);
+      display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+    .r-card.done .chk{background:var(--done);border-color:var(--done);}
+    .chk svg{opacity:0;transition:opacity .2s;}
+    .r-card.done .chk svg{opacity:1;}
+    .rest{background:var(--card);border:1px solid var(--border);border-radius:12px;
+      padding:18px;text-align:center;color:var(--dim);font-size:13px;}
+    .f-stack{display:flex;flex-direction:column;gap:7px;}
+    .f-card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+      padding:11px 14px;display:flex;align-items:center;gap:10px;}
+    .f-tag{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--accent);width:16px;flex-shrink:0;}
+    .f-in{background:none;border:none;color:var(--text);font-size:14px;
+      font-family:var(--fb);flex:1;outline:none;min-width:0;}
+    .f-in::placeholder{color:var(--muted);}
+    .k-in{background:none;border:none;color:var(--accent);font-family:var(--fd);
+      font-size:18px;letter-spacing:1px;width:58px;outline:none;text-align:right;
+      -webkit-appearance:none;flex-shrink:0;}
+    .k-in::placeholder{color:var(--muted);}
+    .k-unit{font-size:9px;color:var(--dim);flex-shrink:0;}
+    .k-total{background:var(--card);border:1px solid var(--border);border-radius:12px;
+      padding:11px 14px;display:flex;align-items:center;justify-content:space-between;}
+    .k-total-lbl{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+    .k-total-num{font-family:var(--fd);font-size:24px;letter-spacing:1px;color:var(--accent);}
+    .k-total-num span{font-size:11px;color:var(--dim);margin-left:2px;}
+    .btn{display:block;margin:16px 18px 0;width:calc(100% - 36px);
+      background:var(--accent);color:#fff;border:none;border-radius:12px;
+      padding:16px;font-family:var(--fb);font-size:13px;font-weight:700;
+      letter-spacing:2px;cursor:pointer;transition:opacity .15s,background .2s;}
+    .btn:active{opacity:.82;}
+    .btn.ok{background:var(--done);}
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <div class="header-top">
-      <div class="date-block">
-        <div class="date-num" id="dateNum">—</div>
-        <div class="date-day" id="dateDay">—</div>
-      </div>
-    </div>
-    <div class="today-tags" id="todayTags"></div>
+<div class="wrap">
+  <div class="hdr">
+    <div class="hdr-date" id="dNum">—</div>
+    <div class="hdr-day" id="dDay">—</div>
+    <div class="tags" id="tags"></div>
   </div>
-  <div class="section">
-    <div class="section-label">計測</div>
-    <div class="measure-grid">
-      <div class="measure-card">
-        <div class="measure-name">体重</div>
-        <div class="measure-row">
-          <input class="measure-input" id="weight" type="number" inputmode="decimal" placeholder="65" step="0.1">
-          <span class="measure-unit">kg</span>
+  <div class="sec">
+    <div class="sec-lbl">計測</div>
+    <div class="m-grid">
+      <div class="m-card">
+        <div class="m-name">体重</div>
+        <div class="m-row">
+          <input class="m-in" id="wt" type="number" inputmode="decimal" placeholder="65" step="0.1">
+          <span class="m-unit">kg</span>
         </div>
       </div>
-      <div class="measure-card">
-        <div class="measure-name">体脂肪率</div>
-        <div class="measure-row">
-          <input class="measure-input" id="fat" type="number" inputmode="decimal" placeholder="18" step="0.1">
-          <span class="measure-unit">%</span>
+      <div class="m-card">
+        <div class="m-name">体脂肪率</div>
+        <div class="m-row">
+          <input class="m-in" id="ft" type="number" inputmode="decimal" placeholder="18" step="0.1">
+          <span class="m-unit">%</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="section">
-    <div class="section-label">今日のルーティン</div>
-    <div class="routine-stack" id="routineList"></div>
+  <div class="sec">
+    <div class="sec-lbl">今日のルーティン</div>
+    <div class="r-stack" id="rList"></div>
   </div>
-  <div class="section">
-    <div class="section-label">食事</div>
-    <div class="food-stack">
-      <div class="food-card">
-        <span class="food-tag">朝</span>
-        <input class="food-input" id="f-am" type="text" placeholder="例：納豆ご飯">
-        <input class="kcal-input" id="k-am" type="number" inputmode="numeric" placeholder="—">
-        <span class="kcal-unit">kcal</span>
+  <div class="sec">
+    <div class="sec-lbl">食事</div>
+    <div class="f-stack">
+      <div class="f-card">
+        <span class="f-tag">朝</span>
+        <input class="f-in" id="fam" type="text" placeholder="例：納豆ご飯">
+        <input class="k-in" id="kam" type="number" inputmode="numeric" placeholder="—">
+        <span class="k-unit">kcal</span>
       </div>
-      <div class="food-card">
-        <span class="food-tag">昼</span>
-        <input class="food-input" id="f-pm" type="text" placeholder="例：定食、ランチ">
-        <input class="kcal-input" id="k-pm" type="number" inputmode="numeric" placeholder="—">
-        <span class="kcal-unit">kcal</span>
+      <div class="f-card">
+        <span class="f-tag">昼</span>
+        <input class="f-in" id="fpm" type="text" placeholder="例：定食">
+        <input class="k-in" id="kpm" type="number" inputmode="numeric" placeholder="—">
+        <span class="k-unit">kcal</span>
       </div>
-      <div class="food-card">
-        <span class="food-tag">夜</span>
-        <input class="food-input" id="f-ev" type="text" placeholder="例：自炊、外食">
-        <input class="kcal-input" id="k-ev" type="number" inputmode="numeric" placeholder="—">
-        <span class="kcal-unit">kcal</span>
+      <div class="f-card">
+        <span class="f-tag">夜</span>
+        <input class="f-in" id="fev" type="text" placeholder="例：自炊">
+        <input class="k-in" id="kev" type="number" inputmode="numeric" placeholder="—">
+        <span class="k-unit">kcal</span>
       </div>
-      <div class="calorie-total">
-        <span class="calorie-label">合計</span>
-        <div class="calorie-num" id="kcalTotal">0<span>kcal</span></div>
+      <div class="k-total">
+        <span class="k-total-lbl">合計カロリー</span>
+        <div class="k-total-num" id="kTot">0<span>kcal</span></div>
       </div>
     </div>
   </div>
-  <button class="send-btn" id="sendBtn" onclick="copyReport()">
-    クロロに送る — コピー
-  </button>
+  <button class="btn" id="copyBtn" onclick="doCopy()">クロロに送る — コピー</button>
 </div>
 <script>
-  const ACTIVITIES = [
-    { key:'reading',  label:'読書',        icon:'📚', days:[0,1,2,3,4,5,6] },
-    { key:'training', label:'トレーニング', icon:'💪', days:[1,3,5,6] },
-    { key:'running',  label:'ランニング',   icon:'🏃', days:[2,4] },
-    { key:'piano',    label:'ピアノ',       icon:'🎹', days:[1,3,5] },
-  ];
-  const DAYS_JA    = ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
-  const DAYS_SHORT = ['日','月','火','水','木','金','土'];
+const ACT = [
+  {key:'reading', label:'読書',        icon:'📚', days:[0,1,2,3,4,5,6]},
+  {key:'train',   label:'トレーニング', icon:'💪', days:[1,3,5,6]},
+  {key:'run',     label:'ランニング',   icon:'🏃', days:[2,4]},
+  {key:'piano',   label:'ピアノ',       icon:'🎹', days:[1,3,5]},
+];
+const DAYJA    = ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
+const DAYSHORT = ['日','月','火','水','木','金','土'];
 
-  const now = new Date();
-  const dow = now.getDay();
-  const y  = now.getFullYear();
-  const mo = String(now.getMonth()+1).padStart(2,'0');
-  const da = String(now.getDate()).padStart(2,'0');
+const KCAL_DB = [
+  {keys:['納豆ご飯','納豆ごはん'],         v:360},
+  {keys:['ご飯','白飯','ごはん'],           v:250},
+  {keys:['おにぎり'],                        v:200},
+  {keys:['パン','食パン','トースト'],       v:160},
+  {keys:['納豆'],                            v:100},
+  {keys:['卵','たまご','目玉焼き','ゆで卵'],v:90},
+  {keys:['オムレツ','オムライス'],           v:420},
+  {keys:['味噌汁','みそ汁'],                v:30},
+  {keys:['ヨーグルト'],                      v:80},
+  {keys:['バナナ'],                          v:90},
+  {keys:['プロテイン'],                      v:130},
+  {keys:['定食'],                            v:700},
+  {keys:['弁当','お弁当'],                  v:650},
+  {keys:['カレー','カレーライス'],           v:700},
+  {keys:['ラーメン'],                        v:500},
+  {keys:['うどん'],                          v:280},
+  {keys:['そば'],                            v:270},
+  {keys:['パスタ','スパゲッティ'],           v:400},
+  {keys:['チャーハン','炒飯'],               v:480},
+  {keys:['唐揚げ','からあげ'],              v:400},
+  {keys:['焼肉','焼き肉','やきにく'],       v:500},
+  {keys:['ハンバーグ'],                      v:430},
+  {keys:['とんかつ','カツ'],                v:600},
+  {keys:['ステーキ'],                        v:500},
+  {keys:['餃子','ぎょうざ'],                v:280},
+  {keys:['寿司','すし','回転寿司'],         v:350},
+  {keys:['ハンバーガー','バーガー'],         v:450},
+  {keys:['ピザ'],                            v:500},
+  {keys:['サラダ'],                          v:60},
+  {keys:['サンドイッチ'],                    v:320},
+  {keys:['焼き魚','さば','鮭','さけ'],      v:280},
+  {keys:['鶏肉','チキン','とりにく'],       v:250},
+  {keys:['豚肉','ぶた'],                    v:350},
+  {keys:['牛肉','ビーフ'],                  v:400},
+  {keys:['鍋','なべ'],                      v:350},
+  {keys:['牛乳','ミルク'],                  v:130},
+  {keys:['コーヒー','お茶'],                v:5},
+  {keys:['コンビニ'],                        v:600},
+  {keys:['外食'],                            v:700},
+  {keys:['自炊'],                            v:500},
+];
 
-  document.getElementById('dateNum').textContent = `${y}.${mo}.${da}`;
-  document.getElementById('dateDay').textContent = DAYS_JA[dow];
+function guessKcal(name) {
+  if (!name) return null;
+  const sorted = [...KCAL_DB].sort((a,b) => b.keys[0].length - a.keys[0].length);
+  for (const row of sorted) {
+    if (row.keys.some(k => name.includes(k))) return row.v;
+  }
+  return null;
+}
 
-  const todayActs = ACTIVITIES.filter(a => a.days.includes(dow));
-  const state = {};
+const now = new Date();
+const dow = now.getDay();
+const y  = now.getFullYear();
+const mo = String(now.getMonth()+1).padStart(2,'0');
+const da = String(now.getDate()).padStart(2,'0');
+document.getElementById('dNum').textContent = `${y}.${mo}.${da}`;
+document.getElementById('dDay').textContent = DAYJA[dow];
 
-  const tagsEl = document.getElementById('todayTags');
-  todayActs.forEach(a => {
-    const t = document.createElement('span');
-    t.className = 'today-tag';
-    t.textContent = a.label;
-    tagsEl.appendChild(t);
-  });
+const todayActs = ACT.filter(a => a.days.includes(dow));
+const state = {};
 
-  const listEl = document.getElementById('routineList');
-  if (todayActs.length === 0) {
-    listEl.innerHTML = '<div class="rest">今日はルーティンなし — ゆっくり休もう</div>';
-  } else {
-    todayActs.forEach(act => {
-      state[act.key] = false;
-      const card = document.createElement('div');
-      card.className = 'routine-card';
-      card.id = 'c-' + act.key;
-      card.innerHTML = `
-        <div class="routine-left">
-          <div class="r-icon">${act.icon}</div>
-          <div class="r-label">${act.label}</div>
-        </div>
-        <div class="check">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-            <path d="M2 6.5L5 9.5L11 3.5" stroke="white" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>`;
-      card.addEventListener('click', () => {
-        state[act.key] = !state[act.key];
-        card.classList.toggle('done', state[act.key]);
-      });
-      listEl.appendChild(card);
+const tagsEl = document.getElementById('tags');
+todayActs.forEach(a => {
+  const t = document.createElement('span');
+  t.className = 'tag'; t.textContent = a.label;
+  tagsEl.appendChild(t);
+});
+
+const rList = document.getElementById('rList');
+if (!todayActs.length) {
+  rList.innerHTML = '<div class="rest">今日はルーティンなし — ゆっくり休もう</div>';
+} else {
+  todayActs.forEach(act => {
+    state[act.key] = false;
+    const c = document.createElement('div');
+    c.className = 'r-card'; c.id = 'c-'+act.key;
+    c.innerHTML = `<div class="r-left"><div class="r-ico">${act.icon}</div><div class="r-lbl">${act.label}</div></div>
+      <div class="chk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M2 6L4.5 8.5L10 3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+    c.addEventListener('click', () => {
+      state[act.key] = !state[act.key];
+      c.classList.toggle('done', state[act.key]);
     });
-  }
-
-  ['k-am','k-pm','k-ev'].forEach(id => {
-    document.getElementById(id).addEventListener('input', updateKcal);
+    rList.appendChild(c);
   });
-  function updateKcal() {
-    const total = ['k-am','k-pm','k-ev'].reduce((sum, id) => {
-      return sum + (parseFloat(document.getElementById(id).value) || 0);
-    }, 0);
-    document.getElementById('kcalTotal').innerHTML = `${total}<span>kcal</span>`;
+}
+
+['fam','fpm','fev'].forEach((fid, i) => {
+  const kid = ['kam','kpm','kev'][i];
+  document.getElementById(fid).addEventListener('input', function() {
+    const guess = guessKcal(this.value);
+    const kEl = document.getElementById(kid);
+    if (guess !== null) { kEl.value = guess; updateTotal(); }
+  });
+  document.getElementById(fid).addEventListener('blur', function() {
+    const guess = guessKcal(this.value);
+    const kEl = document.getElementById(kid);
+    if (guess !== null && !kEl.value) { kEl.value = guess; updateTotal(); }
+  });
+});
+
+['kam','kpm','kev'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateTotal);
+});
+function updateTotal() {
+  const total = ['kam','kpm','kev'].reduce((s,id) => s+(parseFloat(document.getElementById(id).value)||0), 0);
+  document.getElementById('kTot').innerHTML = `${total}<span>kcal</span>`;
+}
+
+function doCopy() {
+  const wt  = document.getElementById('wt').value;
+  const ft  = document.getElementById('ft').value;
+  const fam = document.getElementById('fam').value;
+  const fpm = document.getElementById('fpm').value;
+  const fev = document.getElementById('fev').value;
+  const kam = document.getElementById('kam').value;
+  const kpm = document.getElementById('kpm').value;
+  const kev = document.getElementById('kev').value;
+  const ktot = (parseFloat(kam)||0)+(parseFloat(kpm)||0)+(parseFloat(kev)||0);
+
+  let t = `📅 ${y}/${mo}/${da}（${DAYSHORT[dow]}）\n\n`;
+  t += `⚖️ 体重：${wt||'未'}kg　体脂肪：${ft||'未'}%\n\n`;
+  t += `🍽️ 食事\n`;
+  t += `　朝：${fam||'未'}${kam?' '+kam+'kcal':''}\n`;
+  t += `　昼：${fpm||'未'}${kpm?' '+kpm+'kcal':''}\n`;
+  t += `　夜：${fev||'未'}${kev?' '+kev+'kcal':''}\n`;
+  if (ktot>0) t += `　合計：${ktot}kcal\n`;
+  if (todayActs.length) {
+    t += `\n🗒️ ルーティン\n`;
+    todayActs.forEach(a => { t += `　${state[a.key]?'✅':'❌'} ${a.label}\n`; });
   }
 
-  function copyReport() {
-    const w   = document.getElementById('weight').value;
-    const f   = document.getElementById('fat').value;
-    const am  = document.getElementById('f-am').value;
-    const pm  = document.getElementById('f-pm').value;
-    const ev  = document.getElementById('f-ev').value;
-    const kam = document.getElementById('k-am').value;
-    const kpm = document.getElementById('k-pm').value;
-    const kev = document.getElementById('k-ev').value;
-    const ktotal = (parseFloat(kam)||0)+(parseFloat(kpm)||0)+(parseFloat(kev)||0);
-
-    let t = `📅 ${y}/${mo}/${da}（${DAYS_SHORT[dow]}）\n\n`;
-    t += `⚖️ 体重：${w||'未'}kg　体脂肪：${f||'未'}%\n\n`;
-    t += `🍽️ 食事\n`;
-    t += `　朝：${am||'未'}　${kam?kam+'kcal':''}\n`;
-    t += `　昼：${pm||'未'}　${kpm?kpm+'kcal':''}\n`;
-    t += `　夜：${ev||'未'}　${kev?kev+'kcal':''}\n`;
-    if (ktotal > 0) t += `　合計：${ktotal}kcal\n`;
-    if (todayActs.length > 0) {
-      t += `\n🗒️ ルーティン\n`;
-      todayActs.forEach(a => {
-        t += `　${state[a.key]?'✅':'❌'} ${a.label}\n`;
-      });
-    }
-
-    navigator.clipboard.writeText(t).then(flash).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = t;
-      ta.style.cssText = 'position:fixed;opacity:0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      flash();
-    });
-  }
-
-  function flash() {
-    const btn = document.getElementById('sendBtn');
-    const orig = btn.textContent;
-    btn.textContent = 'コピーしました！';
-    btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 2000);
-  }
+  navigator.clipboard.writeText(t).then(flash).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); flash();
+  });
+}
+function flash() {
+  const b = document.getElementById('copyBtn');
+  const o = b.textContent;
+  b.textContent = 'コピーしました！'; b.classList.add('ok');
+  setTimeout(() => { b.textContent = o; b.classList.remove('ok'); }, 2000);
+}
 </script>
 </body>
 </html>
