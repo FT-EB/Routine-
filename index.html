@@ -65,6 +65,11 @@
     .add-btn{background:rgba(255,85,0,0.1);border:1px solid rgba(255,85,0,0.3);
       color:var(--accent);border-radius:6px;padding:2px 10px;font-size:13px;
       font-weight:700;cursor:pointer;font-family:var(--fb);}
+    .meal-hdr-btns{display:flex;gap:6px;align-items:center;}
+    .copy-btn{background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.2);
+      color:var(--dim);border-radius:6px;padding:2px 8px;font-size:11px;
+      font-weight:600;cursor:pointer;font-family:var(--fb);transition:color .2s,border-color .2s;}
+    .copy-btn.ok{color:var(--done);border-color:rgba(34,197,94,0.4);}
     .food-rows{display:flex;flex-direction:column;}
     .food-row{display:flex;align-items:center;gap:8px;padding:9px 14px;
       border-bottom:1px solid var(--border);}
@@ -126,21 +131,30 @@
       <div class="meal-block">
         <div class="meal-hdr">
           <span class="meal-lbl">朝</span>
-          <button class="add-btn" onclick="addRow('am')">＋ 追加</button>
+          <div class="meal-hdr-btns">
+            <button class="copy-btn" id="copy-meal-am" onclick="copyMeal('am')">📋 ダビデへ</button>
+            <button class="add-btn" onclick="addRow('am')">＋ 追加</button>
+          </div>
         </div>
         <div class="food-rows" id="rows-am"></div>
       </div>
       <div class="meal-block">
         <div class="meal-hdr">
           <span class="meal-lbl">昼</span>
-          <button class="add-btn" onclick="addRow('pm')">＋ 追加</button>
+          <div class="meal-hdr-btns">
+            <button class="copy-btn" id="copy-meal-pm" onclick="copyMeal('pm')">📋 ダビデへ</button>
+            <button class="add-btn" onclick="addRow('pm')">＋ 追加</button>
+          </div>
         </div>
         <div class="food-rows" id="rows-pm"></div>
       </div>
       <div class="meal-block">
         <div class="meal-hdr">
           <span class="meal-lbl">夜</span>
-          <button class="add-btn" onclick="addRow('ev')">＋ 追加</button>
+          <div class="meal-hdr-btns">
+            <button class="copy-btn" id="copy-meal-ev" onclick="copyMeal('ev')">📋 ダビデへ</button>
+            <button class="add-btn" onclick="addRow('ev')">＋ 追加</button>
+          </div>
         </div>
         <div class="food-rows" id="rows-ev"></div>
       </div>
@@ -163,54 +177,28 @@ const DAYJA=['日曜日','月曜日','火曜日','水曜日','木曜日','金曜
 const DAYSHORT=['日','月','火','水','木','金','土'];
 
 const KCAL_DB=[
-  {keys:['納豆ご飯','納豆ごはん'],v:400},
-  {keys:['ご飯','白飯','ごはん'],v:270},
-  {keys:['おにぎり'],v:200},
-  {keys:['パン','食パン','トースト'],v:160},
-  {keys:['納豆'],v:100},
-  {keys:['卵','たまご','目玉焼き','ゆで卵'],v:90},
-  {keys:['オムレツ','オムライス'],v:500},
-  {keys:['味噌汁','みそ汁'],v:30},
-  {keys:['ヨーグルト'],v:80},
-  {keys:['バナナ'],v:90},
-  {keys:['プロテイン'],v:130},
-  {keys:['定食'],v:850},
-  {keys:['弁当','お弁当'],v:750},
-  {keys:['カレー','カレーライス'],v:850},
-  {keys:['ラーメン'],v:650},
-  {keys:['うどん'],v:420},
-  {keys:['そば'],v:400},
-  {keys:['パスタ','スパゲッティ'],v:550},
-  {keys:['チャーハン','炒飯'],v:620},
-  {keys:['唐揚げ','からあげ'],v:550},
-  {keys:['焼肉','焼き肉','やきにく'],v:650},
-  {keys:['ハンバーグ'],v:500},
-  {keys:['とんかつ','カツ'],v:750},
-  {keys:['ステーキ'],v:650},
-  {keys:['餃子','ぎょうざ'],v:320},
-  {keys:['寿司','すし','回転寿司'],v:500},
-  {keys:['ハンバーガー','バーガー'],v:600},
-  {keys:['ピザ'],v:700},
-  {keys:['サラダ'],v:80},
-  {keys:['サンドイッチ'],v:380},
-  {keys:['焼き魚','さば','鮭','さけ'],v:300},
-  {keys:['鶏肉','チキン','とりにく'],v:300},
-  {keys:['豚肉','ぶた'],v:400},
-  {keys:['牛肉','ビーフ'],v:500},
-  {keys:['鍋','なべ'],v:450},
-  {keys:['牛乳','ミルク'],v:130},
-  {keys:['コーヒー','お茶'],v:5},
-  {keys:['コンビニ'],v:750},
-  {keys:['外食'],v:900},
-  {keys:['自炊'],v:600},
+  {keys:['納豆ご飯','納豆ごはん'],v:400},{keys:['ご飯','白飯','ごはん'],v:270},
+  {keys:['おにぎり'],v:200},{keys:['パン','食パン','トースト'],v:160},
+  {keys:['納豆'],v:100},{keys:['卵','たまご','目玉焼き','ゆで卵'],v:90},
+  {keys:['オムレツ','オムライス'],v:500},{keys:['味噌汁','みそ汁'],v:30},
+  {keys:['ヨーグルト'],v:80},{keys:['バナナ'],v:90},{keys:['プロテイン'],v:130},
+  {keys:['定食'],v:850},{keys:['弁当','お弁当'],v:750},{keys:['カレー','カレーライス'],v:850},
+  {keys:['ラーメン'],v:650},{keys:['うどん'],v:420},{keys:['そば'],v:400},
+  {keys:['パスタ','スパゲッティ'],v:550},{keys:['チャーハン','炒飯'],v:620},
+  {keys:['唐揚げ','からあげ'],v:550},{keys:['焼肉','焼き肉','やきにく'],v:650},
+  {keys:['ハンバーグ'],v:500},{keys:['とんかつ','カツ'],v:750},{keys:['ステーキ'],v:650},
+  {keys:['餃子','ぎょうざ'],v:320},{keys:['寿司','すし','回転寿司'],v:500},
+  {keys:['ハンバーガー','バーガー'],v:600},{keys:['ピザ'],v:700},{keys:['サラダ'],v:80},
+  {keys:['サンドイッチ'],v:380},{keys:['焼き魚','さば','鮭','さけ'],v:300},
+  {keys:['鶏肉','チキン','とりにく'],v:300},{keys:['豚肉','ぶた'],v:400},
+  {keys:['牛肉','ビーフ'],v:500},{keys:['鍋','なべ'],v:450},{keys:['牛乳','ミルク'],v:130},
+  {keys:['コーヒー','お茶'],v:5},{keys:['コンビニ'],v:750},{keys:['外食'],v:900},{keys:['自炊'],v:600},
 ];
 
 function guessKcal(name){
   if(!name)return null;
   const sorted=[...KCAL_DB].sort((a,b)=>b.keys[0].length-a.keys[0].length);
-  for(const row of sorted){
-    if(row.keys.some(k=>name.includes(k)))return row.v;
-  }
+  for(const row of sorted){if(row.keys.some(k=>name.includes(k)))return row.v;}
   return null;
 }
 
@@ -240,10 +228,7 @@ if(!todayActs.length){
     c.innerHTML=`<div class="r-left"><div class="r-ico">${act.icon}</div><div class="r-lbl">${act.label}</div></div>
       <div class="chk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none">
         <path d="M2 6L4.5 8.5L10 3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
-    c.addEventListener('click',()=>{
-      state[act.key]=!state[act.key];
-      c.classList.toggle('done',state[act.key]);
-    });
+    c.addEventListener('click',()=>{state[act.key]=!state[act.key];c.classList.toggle('done',state[act.key]);});
     rList.appendChild(c);
   });
 }
@@ -310,6 +295,28 @@ function doCopy(){
     document.body.appendChild(ta);ta.select();document.execCommand('copy');
     document.body.removeChild(ta);flash();
   });
+}
+function copyMeal(meal){
+  const emoji={am:'🌅',pm:'☀️',ev:'🌙'};
+  const items=getMealData(meal).filter(i=>i.f);
+  if(!items.length)return;
+  const days=['日','月','火','水','木','金','土'];
+  const dateStr=`【${y}年${parseInt(mo)}月${parseInt(da)}日（${days[dow]}）】`;
+  const itemStr=items.map(i=>`・${i.f}${i.k?`（${i.k}kcal）`:''}`).join('');
+  const text=`${dateStr}\n食事記録\n${emoji[meal]}${itemStr}`;
+  navigator.clipboard.writeText(text).then(()=>flashMealBtn(meal)).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);flashMealBtn(meal);
+  });
+}
+function flashMealBtn(meal){
+  const btn=document.getElementById('copy-meal-'+meal);
+  if(!btn)return;
+  const orig=btn.innerHTML;
+  btn.innerHTML='✅';btn.classList.add('ok');
+  setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('ok');},2000);
 }
 function flash(){
   const b=document.getElementById('copyBtn');const o=b.textContent;
