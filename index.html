@@ -10,10 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#08080F;--card:#0F0F1A;--border:#1C1C2E;
-      --accent:#FF5500;--text:#EEEEF8;--dim:#6666AA;
-      --muted:#2A2A3E;--done:#22C55E;
-      --done-bg:rgba(34,197,94,0.07);--done-border:rgba(34,197,94,0.3);
+      --bg:#0F172A;--card:#1E293B;--border:#334155;
+      --accent:#FF5500;--text:#F1F5F9;--dim:#94A3B8;
+      --muted:#475569;--done:#22C55E;
+      --done-bg:rgba(34,197,94,0.1);--done-border:rgba(34,197,94,0.4);
       --fd:'Bebas Neue',sans-serif;--fb:'Noto Sans JP',sans-serif;
     }
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -161,30 +161,59 @@ const ACT=[
 ];
 const DAYJA=['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
 const DAYSHORT=['日','月','火','水','木','金','土'];
+
 const KCAL_DB=[
-  {keys:['納豆ご飯','納豆ごはん'],v:360},{keys:['ご飯','白飯','ごはん'],v:250},
-  {keys:['おにぎり'],v:200},{keys:['パン','食パン','トースト'],v:160},
-  {keys:['納豆'],v:100},{keys:['卵','たまご','目玉焼き','ゆで卵'],v:90},
-  {keys:['オムレツ','オムライス'],v:420},{keys:['味噌汁','みそ汁'],v:30},
-  {keys:['ヨーグルト'],v:80},{keys:['バナナ'],v:90},{keys:['プロテイン'],v:130},
-  {keys:['定食'],v:700},{keys:['弁当','お弁当'],v:650},{keys:['カレー','カレーライス'],v:700},
-  {keys:['ラーメン'],v:500},{keys:['うどん'],v:280},{keys:['そば'],v:270},
-  {keys:['パスタ','スパゲッティ'],v:400},{keys:['チャーハン','炒飯'],v:480},
-  {keys:['唐揚げ','からあげ'],v:400},{keys:['焼肉','焼き肉','やきにく'],v:500},
-  {keys:['ハンバーグ'],v:430},{keys:['とんかつ','カツ'],v:600},{keys:['ステーキ'],v:500},
-  {keys:['餃子','ぎょうざ'],v:280},{keys:['寿司','すし','回転寿司'],v:350},
-  {keys:['ハンバーガー','バーガー'],v:450},{keys:['ピザ'],v:500},{keys:['サラダ'],v:60},
-  {keys:['サンドイッチ'],v:320},{keys:['焼き魚','さば','鮭','さけ'],v:280},
-  {keys:['鶏肉','チキン','とりにく'],v:250},{keys:['豚肉','ぶた'],v:350},
-  {keys:['牛肉','ビーフ'],v:400},{keys:['鍋','なべ'],v:350},{keys:['牛乳','ミルク'],v:130},
-  {keys:['コーヒー','お茶'],v:5},{keys:['コンビニ'],v:600},{keys:['外食'],v:700},{keys:['自炊'],v:500},
+  {keys:['納豆ご飯','納豆ごはん'],v:400},
+  {keys:['ご飯','白飯','ごはん'],v:270},
+  {keys:['おにぎり'],v:200},
+  {keys:['パン','食パン','トースト'],v:160},
+  {keys:['納豆'],v:100},
+  {keys:['卵','たまご','目玉焼き','ゆで卵'],v:90},
+  {keys:['オムレツ','オムライス'],v:500},
+  {keys:['味噌汁','みそ汁'],v:30},
+  {keys:['ヨーグルト'],v:80},
+  {keys:['バナナ'],v:90},
+  {keys:['プロテイン'],v:130},
+  {keys:['定食'],v:850},
+  {keys:['弁当','お弁当'],v:750},
+  {keys:['カレー','カレーライス'],v:850},
+  {keys:['ラーメン'],v:650},
+  {keys:['うどん'],v:420},
+  {keys:['そば'],v:400},
+  {keys:['パスタ','スパゲッティ'],v:550},
+  {keys:['チャーハン','炒飯'],v:620},
+  {keys:['唐揚げ','からあげ'],v:550},
+  {keys:['焼肉','焼き肉','やきにく'],v:650},
+  {keys:['ハンバーグ'],v:500},
+  {keys:['とんかつ','カツ'],v:750},
+  {keys:['ステーキ'],v:650},
+  {keys:['餃子','ぎょうざ'],v:320},
+  {keys:['寿司','すし','回転寿司'],v:500},
+  {keys:['ハンバーガー','バーガー'],v:600},
+  {keys:['ピザ'],v:700},
+  {keys:['サラダ'],v:80},
+  {keys:['サンドイッチ'],v:380},
+  {keys:['焼き魚','さば','鮭','さけ'],v:300},
+  {keys:['鶏肉','チキン','とりにく'],v:300},
+  {keys:['豚肉','ぶた'],v:400},
+  {keys:['牛肉','ビーフ'],v:500},
+  {keys:['鍋','なべ'],v:450},
+  {keys:['牛乳','ミルク'],v:130},
+  {keys:['コーヒー','お茶'],v:5},
+  {keys:['コンビニ'],v:750},
+  {keys:['外食'],v:900},
+  {keys:['自炊'],v:600},
 ];
+
 function guessKcal(name){
   if(!name)return null;
   const sorted=[...KCAL_DB].sort((a,b)=>b.keys[0].length-a.keys[0].length);
-  for(const row of sorted){if(row.keys.some(k=>name.includes(k)))return row.v;}
+  for(const row of sorted){
+    if(row.keys.some(k=>name.includes(k)))return row.v;
+  }
   return null;
 }
+
 const now=new Date();
 const dow=now.getDay();
 const y=now.getFullYear();
@@ -192,6 +221,7 @@ const mo=String(now.getMonth()+1).padStart(2,'0');
 const da=String(now.getDate()).padStart(2,'0');
 document.getElementById('dNum').textContent=`${y}.${mo}.${da}`;
 document.getElementById('dDay').textContent=DAYJA[dow];
+
 const todayActs=ACT.filter(a=>a.days.includes(dow));
 const state={};
 const tagsEl=document.getElementById('tags');
@@ -210,10 +240,14 @@ if(!todayActs.length){
     c.innerHTML=`<div class="r-left"><div class="r-ico">${act.icon}</div><div class="r-lbl">${act.label}</div></div>
       <div class="chk"><svg width="12" height="12" viewBox="0 0 12 12" fill="none">
         <path d="M2 6L4.5 8.5L10 3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
-    c.addEventListener('click',()=>{state[act.key]=!state[act.key];c.classList.toggle('done',state[act.key]);});
+    c.addEventListener('click',()=>{
+      state[act.key]=!state[act.key];
+      c.classList.toggle('done',state[act.key]);
+    });
     rList.appendChild(c);
   });
 }
+
 function addRow(meal){
   const container=document.getElementById('rows-'+meal);
   const row=document.createElement('div');
@@ -229,12 +263,15 @@ function addRow(meal){
   kIn.addEventListener('input',updateTotal);
   container.appendChild(row);
 }
+
 ['am','pm','ev'].forEach(m=>addRow(m));
+
 function updateTotal(){
   let total=0;
   document.querySelectorAll('.k-in').forEach(el=>{total+=parseFloat(el.value)||0;});
   document.getElementById('kTot').innerHTML=`${total}<span>kcal</span>`;
 }
+
 function getMealData(meal){
   const rows=document.querySelectorAll(`#rows-${meal} .food-row`);
   const items=[];
@@ -245,6 +282,7 @@ function getMealData(meal){
   });
   return items;
 }
+
 function doCopy(){
   const wt=document.getElementById('wt').value;
   const ft=document.getElementById('ft').value;
