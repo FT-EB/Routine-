@@ -11,64 +11,34 @@
   <style>
 
     :root {
-      --bg:           #08080F;
-      --bg-card:      #10101A;
-      --bg-input:     #18182A;
-      --border:       #252535;
-      --accent:       #FF5500;
-      --accent-glow:  rgba(255,85,0,0.15);
-      --accent-border:rgba(255,85,0,0.35);
-      --text:         #EEEEF8;
-      --text-dim:     #8888AA;
-      --text-muted:   #3D3D55;
-      --success:      #22C55E;
-      --danger:       #EF4444;
-      --indigo:       #6366F1;
-      --indigo-glow:  rgba(99,102,241,0.12);
-      --indigo-border:rgba(99,102,241,0.35);
-      --radius:       16px;
-      --radius-sm:    10px;
-      --font-d:       'Bebas Neue', sans-serif;
-      --font-b:       'Noto Sans JP', sans-serif;
+      --bg:#08080F; --bg-card:#10101A; --bg-input:#18182A; --border:#252535;
+      --accent:#FF5500; --accent-glow:rgba(255,85,0,0.15); --accent-border:rgba(255,85,0,0.35);
+      --text:#EEEEF8; --text-dim:#8888AA; --text-muted:#3D3D55;
+      --success:#22C55E; --danger:#EF4444;
+      --indigo:#6366F1; --indigo-glow:rgba(99,102,241,0.12); --indigo-border:rgba(99,102,241,0.35);
+      --radius:16px; --radius-sm:10px;
+      --font-d:'Bebas Neue',sans-serif; --font-b:'Noto Sans JP',sans-serif;
     }
-
     html { width:100vw; max-width:100vw; overflow-x:hidden; -webkit-text-size-adjust:100%; }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; max-width:100%; }
-    body {
-      background:var(--bg); color:var(--text); font-family:var(--font-b);
-      width:100vw; max-width:100vw; min-height:100vh; min-height:100dvh;
-      overflow-x:hidden; overflow-y:auto; position:relative;
-    }
+    body { background:var(--bg); color:var(--text); font-family:var(--font-b); width:100vw; max-width:100vw; min-height:100vh; min-height:100dvh; overflow-x:hidden; overflow-y:auto; position:relative; }
 
-    .bottom-nav {
-      position:fixed; bottom:0; left:0; right:0; width:100vw; max-width:100vw;
-      background:var(--bg-card); border-top:1px solid var(--border);
-      display:flex; padding-bottom:env(safe-area-inset-bottom,0px); z-index:50;
-    }
-    .nav-btn {
-      flex:1; padding:12px 8px 10px;
-      display:flex; flex-direction:column; align-items:center; gap:4px;
-      cursor:pointer; border:none; background:none; font-family:var(--font-b); transition:all 0.15s;
-    }
-    .nav-icon  { font-size:20px; line-height:1; }
+    .bottom-nav { position:fixed; bottom:0; left:0; right:0; width:100vw; max-width:100vw; background:var(--bg-card); border-top:1px solid var(--border); display:flex; padding-bottom:env(safe-area-inset-bottom,0px); z-index:50; }
+    .nav-btn { flex:1; padding:12px 8px 10px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; border:none; background:none; font-family:var(--font-b); transition:all 0.15s; }
+    .nav-icon { font-size:20px; line-height:1; }
     .nav-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); }
     .nav-btn.active .nav-label { color:var(--accent); }
-    .nav-btn.active .nav-icon  { transform:scale(1.1); }
+    .nav-btn.active .nav-icon { transform:scale(1.1); }
 
     .app-panel { display:none; padding-bottom:80px; width:100vw; max-width:100vw; overflow-x:hidden; }
     .app-panel.active { display:block; }
 
-    .header {
-      padding:calc(env(safe-area-inset-top,0px) + 20px) 20px 0;
-      position:relative; overflow:hidden; width:100%;
-    }
-    .header::after {
-      content:''; position:absolute; top:0; left:0; right:0; height:220px; pointer-events:none;
-    }
+    .header { padding:calc(env(safe-area-inset-top,0px) + 20px) 20px 0; position:relative; overflow:hidden; width:100%; }
+    .header::after { content:''; position:absolute; top:0; left:0; right:0; height:220px; pointer-events:none; }
     .header-row { display:flex; justify-content:space-between; align-items:flex-start; }
-    .app-sub   { font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+    .app-sub { font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
     .date-block { text-align:right; }
-    .date-dow  { font-size:11px; color:var(--accent); letter-spacing:1px; }
+    .date-dow { font-size:11px; color:var(--accent); letter-spacing:1px; }
     .date-full { font-family:var(--font-d); font-size:24px; letter-spacing:1px; line-height:1.2; color:var(--accent); }
 
     #panel-night .header::after { background:radial-gradient(ellipse at 50% -20%,rgba(99,102,241,0.14) 0%,transparent 70%); }
@@ -77,76 +47,49 @@
     #panel-fitlog .app-name { font-family:var(--font-d); font-size:40px; letter-spacing:3px; color:var(--accent); line-height:1; }
 
     .today-badge { margin-top:14px; display:flex; align-items:center; gap:12px; padding:13px 16px; border-radius:var(--radius); }
-    .badge-icon  { font-size:22px; }
+    .badge-icon { font-size:22px; }
     .badge-label { font-size:10px; color:#111111; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
     .badge-title { font-size:16px; font-weight:700; color:var(--accent); }
-    #panel-night  .today-badge { background:var(--indigo-glow); border:1px solid var(--indigo-border); }
+    #panel-night .today-badge { background:var(--indigo-glow); border:1px solid var(--indigo-border); }
     #panel-fitlog .today-badge { background:var(--accent-glow); border:1px solid var(--accent-border); }
 
-    .content {
-      padding:16px 20px; padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px);
-      width:100vw; max-width:100vw; overflow-x:hidden; box-sizing:border-box;
-    }
+    .content { padding:16px 20px; padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px); width:100vw; max-width:100vw; overflow-x:hidden; box-sizing:border-box; }
     .sec-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; }
     .section { margin-bottom:22px; }
 
     .progress-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:16px; }
     .progress-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .progress-lbl  { font-size:12px; color:var(--text-dim); }
-    .progress-num  { font-family:var(--font-d); font-size:26px; letter-spacing:1px; }
-    .progress-bar  { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .progress-lbl { font-size:12px; color:var(--text-dim); }
+    .progress-num { font-family:var(--font-d); font-size:26px; letter-spacing:1px; }
+    .progress-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
     .progress-fill { height:100%; border-radius:2px; transition:width 0.4s cubic-bezier(0.4,0,0.2,1); }
-    #panel-night  .progress-num  { color:var(--indigo); }
-    #panel-night  .progress-fill { background:linear-gradient(90deg,var(--indigo),#A5B4FC); }
-    #panel-night  .progress-fill.done-all { background:linear-gradient(90deg,var(--success),#4ADE80); }
-    #panel-fitlog .progress-num  { color:var(--accent); }
+    #panel-night .progress-num { color:var(--indigo); }
+    #panel-night .progress-fill { background:linear-gradient(90deg,var(--indigo),#A5B4FC); }
+    #panel-night .progress-fill.done-all { background:linear-gradient(90deg,var(--success),#4ADE80); }
+    #panel-fitlog .progress-num { color:var(--accent); }
     #panel-fitlog .progress-fill { background:linear-gradient(90deg,var(--accent),#FF8844); }
 
-    .copy-btn {
-      width:100%; padding:17px; background:var(--accent); color:white; border:none;
-      border-radius:var(--radius); font-family:var(--font-b); font-size:15px; font-weight:700;
-      cursor:pointer; margin-top:6px; margin-bottom:10px;
-      box-shadow:0 6px 30px rgba(255,85,0,0.35); transition:all 0.2s; letter-spacing:0.5px;
-    }
+    .copy-btn { width:100%; padding:17px; background:var(--accent); color:white; border:none; border-radius:var(--radius); font-family:var(--font-b); font-size:15px; font-weight:700; cursor:pointer; margin-top:6px; margin-bottom:10px; box-shadow:0 6px 30px rgba(255,85,0,0.35); transition:all 0.2s; letter-spacing:0.5px; }
     .copy-btn:active { transform:scale(0.98); opacity:0.9; }
     .copy-btn.ok { background:var(--success); box-shadow:0 6px 30px rgba(34,197,94,0.35); }
 
-    .week-strip {
-      display:flex; gap:6px; margin:16px 20px 0;
-      overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
-      width:calc(100vw - 40px); max-width:calc(100vw - 40px);
-    }
+    .week-strip { display:flex; gap:6px; margin:16px 20px 0; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; width:calc(100vw - 40px); max-width:calc(100vw - 40px); }
     .week-strip::-webkit-scrollbar { display:none; }
-    .day-pill {
-      flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:4px;
-      padding:9px 12px; border-radius:var(--radius-sm);
-      border:1px solid var(--border); background:var(--bg-card);
-      cursor:pointer; transition:all 0.18s; min-width:44px;
-    }
+    .day-pill { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:4px; padding:9px 12px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-card); cursor:pointer; transition:all 0.18s; min-width:44px; }
     .day-pill:active { opacity:0.7; transform:scale(0.97); }
     .day-pill.active { border-color:var(--indigo); background:var(--indigo-glow); }
     .day-pill.today .dp-name { color:var(--accent); }
     .dp-name { font-size:11px; color:var(--text-dim); font-weight:500; }
     .dp-icon { font-size:14px; line-height:1; }
     .dp-dots { display:flex; gap:2px; height:5px; align-items:center; }
-    .dp-dot  { width:4px; height:4px; border-radius:50%; background:var(--text-muted); }
-    .dp-dot.done       { background:var(--success); }
+    .dp-dot { width:4px; height:4px; border-radius:50%; background:var(--text-muted); }
+    .dp-dot.done { background:var(--success); }
     .dp-dot.active-day { background:var(--indigo); }
 
-    .task-card {
-      background:var(--bg-card); border:1px solid var(--border);
-      border-radius:var(--radius); padding:14px 16px; margin-bottom:10px;
-      display:flex; align-items:center; gap:14px;
-      cursor:pointer; transition:border-color 0.2s,background 0.2s;
-      -webkit-user-select:none; user-select:none;
-    }
+    .task-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:border-color 0.2s,background 0.2s; -webkit-user-select:none; user-select:none; }
     .task-card:active { opacity:0.8; transform:scale(0.99); }
-    .task-card.done   { border-color:var(--success); background:rgba(34,197,94,0.06); }
-    .task-check {
-      width:42px; height:42px; border-radius:50%; border:2px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; flex-shrink:0; transition:all 0.2s; color:transparent;
-    }
+    .task-card.done { border-color:var(--success); background:rgba(34,197,94,0.06); }
+    .task-check { width:42px; height:42px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; transition:all 0.2s; color:transparent; }
     .task-card.done .task-check { background:var(--success); border-color:var(--success); color:white; }
     .task-info { flex:1; min-width:0; }
     .task-name { font-size:14px; font-weight:500; color:var(--text); }
@@ -154,53 +97,30 @@
     .task-status { font-size:10px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--text-muted); flex-shrink:0; }
     .task-card.done .task-status { color:var(--success); }
 
-    .complete-banner {
-      display:none; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.35);
-      border-radius:var(--radius); padding:16px; margin-bottom:16px; text-align:center;
-    }
+    .complete-banner { display:none; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.35); border-radius:var(--radius); padding:16px; margin-bottom:16px; text-align:center; }
     .complete-banner.show { display:block; }
     .complete-banner-icon { font-size:28px; margin-bottom:6px; }
     .complete-banner-text { font-size:14px; font-weight:700; color:var(--success); }
-    .complete-banner-sub  { font-size:12px; color:var(--text-dim); margin-top:4px; }
+    .complete-banner-sub { font-size:12px; color:var(--text-dim); margin-top:4px; }
 
-    .tabs {
-      display:flex; margin:16px 20px 0;
-      background:var(--bg-card); border:1px solid var(--border);
-      border-radius:var(--radius); padding:4px; gap:4px;
-      width:calc(100vw - 40px); max-width:calc(100vw - 40px); box-sizing:border-box;
-    }
-    .tab {
-      flex:1; padding:11px 8px; text-align:center;
-      font-size:13px; font-weight:500; border-radius:var(--radius-sm);
-      cursor:pointer; transition:all 0.2s; color:var(--text-dim);
-      border:none; background:none; font-family:var(--font-b);
-    }
+    .tabs { display:flex; margin:16px 20px 0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:4px; gap:4px; width:calc(100vw - 40px); max-width:calc(100vw - 40px); box-sizing:border-box; }
+    .tab { flex:1; padding:11px 8px; text-align:center; font-size:13px; font-weight:500; border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; color:var(--text-dim); border:none; background:none; font-family:var(--font-b); }
     .tab.active { background:var(--accent); color:#fff; font-weight:700; box-shadow:0 4px 20px rgba(255,85,0,0.4); }
-    .tab-panel        { display:none; }
+    .tab-panel { display:none; }
     .tab-panel.active { display:block; }
 
     .metrics-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; box-sizing:border-box; }
     .metric-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:16px 14px; }
     .metric-label { font-size:11px; color:var(--text-dim); margin-bottom:6px; }
-    .metric-row   { display:flex; align-items:baseline; gap:4px; }
-    .metric-input {
-      background:none; border:none; outline:none; color:var(--text);
-      font-family:var(--font-d); font-size:36px; letter-spacing:1px; width:100%; caret-color:var(--accent);
-    }
+    .metric-row { display:flex; align-items:baseline; gap:4px; }
+    .metric-input { background:none; border:none; outline:none; color:var(--text); font-family:var(--font-d); font-size:36px; letter-spacing:1px; width:100%; caret-color:var(--accent); }
     .metric-unit { font-size:14px; color:var(--text-dim); flex-shrink:0; }
 
-    .sq-btn {
-      flex:1; padding:6px 4px; background:var(--bg-input);
-      border:1px solid var(--border); border-radius:var(--radius-sm);
-      font-size:18px; cursor:pointer; transition:all 0.15s;
-    }
+    .sq-btn { flex:1; padding:6px 4px; background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:18px; cursor:pointer; transition:all 0.15s; }
     .sq-btn.active { border-color:var(--accent); background:var(--accent-glow); }
 
     .note-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; }
-    .note-input {
-      width:100%; background:none; border:none; outline:none;
-      color:var(--text); font-family:var(--font-b); font-size:14px; resize:none; line-height:1.7;
-    }
+    .note-input { width:100%; background:none; border:none; outline:none; color:var(--text); font-family:var(--font-b); font-size:14px; resize:none; line-height:1.7; }
     .note-input::placeholder { color:var(--text-muted); }
 
     .meal-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; overflow:hidden; width:100%; box-sizing:border-box; }
@@ -211,79 +131,47 @@
     .meal-inline-kcal { width:60px; flex-shrink:0; font-size:13px; padding:8px 0; text-align:right; border-bottom:1px solid var(--border); background:none; border-top:none; border-left:none; border-right:none; outline:none; color:var(--text); font-family:var(--font-b); }
     .meal-inline-kcal::placeholder { color:var(--text-muted); }
     .meal-inline-kcal.estimated { border-color:var(--success); color:var(--success); }
-    .meal-ai-btn {
-      width:32px; height:32px; flex-shrink:0; background:var(--bg-input); color:var(--accent);
-      border:1px solid var(--accent-border); border-radius:50%; font-size:14px;
-      cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;
-    }
+    .meal-ai-btn { width:32px; height:32px; flex-shrink:0; background:var(--bg-input); color:var(--accent); border:1px solid var(--accent-border); border-radius:50%; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
     .meal-ai-btn:active { background:var(--accent-glow); }
-    .meal-add-btn {
-      width:32px; height:32px; flex-shrink:0; background:var(--accent); color:white;
-      border:none; border-radius:50%; font-size:18px; line-height:1; cursor:pointer;
-      box-shadow:0 3px 12px rgba(255,85,0,0.35); display:flex; align-items:center; justify-content:center;
-    }
+    .meal-add-btn { width:32px; height:32px; flex-shrink:0; background:var(--accent); color:white; border:none; border-radius:50%; font-size:18px; line-height:1; cursor:pointer; box-shadow:0 3px 12px rgba(255,85,0,0.35); display:flex; align-items:center; justify-content:center; }
     .meal-item { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px; }
     .meal-item:last-child { border-bottom:none; }
     .meal-item-name { flex:1; min-width:0; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .meal-item-kcal { color:var(--text-dim); font-size:12px; flex-shrink:0; }
-    .meal-item-del  { background:none; border:none; color:var(--text-muted); font-size:14px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+    .meal-item-del { background:none; border:none; color:var(--text-muted); font-size:14px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
 
-    .prep-alert {
-      background:var(--accent-glow); border:1px solid var(--accent-border);
-      border-radius:var(--radius-sm); padding:11px 14px; margin-bottom:14px;
-      font-size:12px; color:#FF8844; line-height:1.5;
-    }
+    .prep-alert { background:var(--accent-glow); border:1px solid var(--accent-border); border-radius:var(--radius-sm); padding:11px 14px; margin-bottom:14px; font-size:12px; color:#FF8844; line-height:1.5; }
 
-    .ex-card {
-      background:var(--bg-card); border:1px solid var(--border);
-      border-radius:var(--radius); padding:15px 16px; margin-bottom:10px;
-      display:flex; align-items:center; gap:14px;
-      cursor:pointer; transition:border-color 0.2s,background 0.2s;
-      -webkit-user-select:none; user-select:none;
-    }
+    .ex-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:15px 16px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:border-color 0.2s,background 0.2s; -webkit-user-select:none; user-select:none; }
     .ex-card:active { opacity:0.8; transform:scale(0.99); }
-    .ex-card.done   { border-color:var(--success); background:rgba(34,197,94,0.06); }
-    .ex-card.failed { border-color:var(--danger);  background:rgba(239,68,68,0.06); }
-    .ex-check {
-      width:42px; height:42px; border-radius:50%; border:2px solid var(--border);
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; flex-shrink:0; transition:all 0.2s; color:transparent;
-    }
-    .ex-card.done   .ex-check { background:var(--success); border-color:var(--success); color:white; }
-    .ex-card.failed .ex-check { background:var(--danger);  border-color:var(--danger);  color:white; }
+    .ex-card.done { border-color:var(--success); background:rgba(34,197,94,0.06); }
+    .ex-card.failed { border-color:var(--danger); background:rgba(239,68,68,0.06); }
+    .ex-check { width:42px; height:42px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; transition:all 0.2s; color:transparent; }
+    .ex-card.done .ex-check { background:var(--success); border-color:var(--success); color:white; }
+    .ex-card.failed .ex-check { background:var(--danger); border-color:var(--danger); color:white; }
     .ex-info { flex:1; min-width:0; }
     .ex-name { font-size:14px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .ex-target { font-size:11px; color:var(--text-dim); margin-top:3px; }
     .ex-status { font-size:10px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--text-muted); flex-shrink:0; }
-    .ex-card.done   .ex-status { color:var(--success); }
+    .ex-card.done .ex-status { color:var(--success); }
     .ex-card.failed .ex-status { color:var(--danger); }
 
     .rest-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:50px 20px; text-align:center; }
-    .rest-icon  { font-size:52px; margin-bottom:14px; }
+    .rest-icon { font-size:52px; margin-bottom:14px; }
     .rest-title { font-size:20px; font-weight:700; margin-bottom:8px; }
-    .rest-text  { font-size:13px; color:var(--text-dim); line-height:1.7; }
+    .rest-text { font-size:13px; color:var(--text-dim); line-height:1.7; }
 
-    /* RUNNING LOG */
     .run-log-wrap { margin-bottom:10px; }
     .run-log-inputs { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
     .run-log-field { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:16px 14px; }
+    .run-log-field:focus-within { border-color:var(--accent); }
     .run-log-label { font-size:11px; color:var(--text-dim); margin-bottom:6px; }
     .run-log-val-row { display:flex; align-items:baseline; gap:4px; }
-    .run-log-input {
-      background:none; border:none; outline:none; color:var(--text);
-      font-family:var(--font-d); font-size:36px; letter-spacing:1px; width:100%;
-      caret-color:var(--accent); -webkit-appearance:none; -moz-appearance:textfield;
-    }
-    .run-log-input::-webkit-inner-spin-button,
-    .run-log-input::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+    .run-log-input { background:none; border:none; outline:none; color:var(--text); font-family:var(--font-d); font-size:36px; letter-spacing:1px; width:100%; caret-color:var(--accent); -webkit-appearance:none; -moz-appearance:textfield; }
+    .run-log-input::-webkit-inner-spin-button, .run-log-input::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
     .run-log-input::placeholder { color:var(--text-muted); }
     .run-log-unit { font-size:14px; color:var(--text-dim); flex-shrink:0; }
-    .run-log-save {
-      width:100%; padding:14px; background:var(--accent); border:none;
-      border-radius:var(--radius); color:white; font-family:var(--font-b);
-      font-size:15px; font-weight:700; cursor:pointer; letter-spacing:0.5px;
-      box-shadow:0 4px 20px rgba(255,85,0,0.3); transition:all 0.2s; margin-bottom:12px;
-    }
+    .run-log-save { width:100%; padding:14px; background:var(--accent); border:none; border-radius:var(--radius); color:white; font-family:var(--font-b); font-size:15px; font-weight:700; cursor:pointer; letter-spacing:0.5px; box-shadow:0 4px 20px rgba(255,85,0,0.3); transition:all 0.2s; margin-bottom:12px; }
     .run-log-save:active { transform:scale(0.98); opacity:0.9; }
     .run-log-month { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; font-size:12px; color:var(--text-dim); }
     .run-log-month b { color:var(--accent); font-size:16px; }
@@ -301,7 +189,6 @@
   </button>
 </div>
 
-<!-- NIGHT -->
 <div class="app-panel active" id="panel-night">
   <div class="header">
     <div class="header-row">
@@ -337,7 +224,6 @@
   </div>
 </div>
 
-<!-- FITLOG -->
 <div class="app-panel" id="panel-fitlog">
   <div class="header">
     <div class="header-row">
@@ -352,32 +238,23 @@
       <div><div class="badge-label">TODAY</div><div class="badge-title" id="f-todayTitle"></div></div>
     </div>
   </div>
-
   <div class="tabs">
     <button class="tab active" onclick="window.switchTab('morning')">🌅 朝の記録</button>
-    <button class="tab"        onclick="window.switchTab('meal')">🍽 食事</button>
-    <button class="tab"        onclick="window.switchTab('training')">💪 トレーニング</button>
+    <button class="tab" onclick="window.switchTab('meal')">🍽 食事</button>
+    <button class="tab" onclick="window.switchTab('training')">💪 トレーニング</button>
   </div>
-
   <div class="content">
-    <!-- 朝の記録 -->
     <div id="f-panel-morning" class="tab-panel active">
       <div class="section">
         <div class="sec-label">身体データ</div>
         <div class="metrics-row">
           <div class="metric-card">
             <div class="metric-label">体重</div>
-            <div class="metric-row">
-              <input class="metric-input" id="f-weight" type="number" oninput="window.saveMorning()" step="0.1" placeholder="65.0" inputmode="decimal">
-              <span class="metric-unit">kg</span>
-            </div>
+            <div class="metric-row"><input class="metric-input" id="f-weight" type="number" oninput="window.saveMorning()" step="0.1" placeholder="65.0" inputmode="decimal"><span class="metric-unit">kg</span></div>
           </div>
           <div class="metric-card">
             <div class="metric-label">体脂肪率</div>
-            <div class="metric-row">
-              <input class="metric-input" id="f-bodyfat" type="number" oninput="window.saveMorning()" step="0.1" placeholder="18.0" inputmode="decimal">
-              <span class="metric-unit">%</span>
-            </div>
+            <div class="metric-row"><input class="metric-input" id="f-bodyfat" type="number" oninput="window.saveMorning()" step="0.1" placeholder="18.0" inputmode="decimal"><span class="metric-unit">%</span></div>
           </div>
         </div>
       </div>
@@ -386,10 +263,7 @@
         <div class="metrics-row">
           <div class="metric-card">
             <div class="metric-label">睡眠時間</div>
-            <div class="metric-row">
-              <input class="metric-input" id="f-sleep-hours" type="number" oninput="window.saveMorning()" step="0.5" placeholder="7.0" inputmode="decimal">
-              <span class="metric-unit">時間</span>
-            </div>
+            <div class="metric-row"><input class="metric-input" id="f-sleep-hours" type="number" oninput="window.saveMorning()" step="0.5" placeholder="7.0" inputmode="decimal"><span class="metric-unit">時間</span></div>
           </div>
           <div class="metric-card">
             <div class="metric-label">睡眠の質</div>
@@ -404,31 +278,22 @@
       </div>
       <div class="section">
         <div class="sec-label">気になること・メモ</div>
-        <div class="note-card">
-          <textarea class="note-input" id="f-notes" oninput="window.saveMorning()" placeholder="体調、腰の状態、気になることなど..." rows="3"></textarea>
-        </div>
+        <div class="note-card"><textarea class="note-input" id="f-notes" oninput="window.saveMorning()" placeholder="体調、腰の状態、気になることなど..." rows="3"></textarea></div>
       </div>
       <button class="copy-btn" id="f-btn-morning" onclick="window.copyMorning()">📋 クロードにコピー</button>
     </div>
 
-    <!-- 食事 -->
     <div id="f-panel-meal" class="tab-panel">
       <div class="section">
         <div class="metric-card" style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;">
           <div>
             <div class="metric-label">今日の合計カロリー</div>
-            <div class="metric-row">
-              <span id="f-totalKcal" style="font-family:var(--font-d);font-size:40px;color:var(--accent);letter-spacing:1px;">0</span>
-              <span class="metric-unit" style="margin-left:4px;">kcal</span>
-            </div>
+            <div class="metric-row"><span id="f-totalKcal" style="font-family:var(--font-d);font-size:40px;color:var(--accent);letter-spacing:1px;">0</span><span class="metric-unit" style="margin-left:4px;">kcal</span></div>
           </div>
           <div style="font-size:36px;">🔥</div>
         </div>
         <div class="meal-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <div class="meal-label" style="margin:0;">🌅 朝食</div>
-            <span id="f-kcal-breakfast" style="font-size:12px;color:var(--text-dim);"></span>
-          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="meal-label" style="margin:0;">🌅 朝食</div><span id="f-kcal-breakfast" style="font-size:12px;color:var(--text-dim);"></span></div>
           <div id="f-list-breakfast"></div>
           <div class="meal-add-row">
             <input class="meal-inline-name" id="f-name-breakfast" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')window.fetchKcal('breakfast')">
@@ -438,10 +303,7 @@
           </div>
         </div>
         <div class="meal-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <div class="meal-label" style="margin:0;">☀️ 昼食</div>
-            <span id="f-kcal-lunch" style="font-size:12px;color:var(--text-dim);"></span>
-          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="meal-label" style="margin:0;">☀️ 昼食</div><span id="f-kcal-lunch" style="font-size:12px;color:var(--text-dim);"></span></div>
           <div id="f-list-lunch"></div>
           <div class="meal-add-row">
             <input class="meal-inline-name" id="f-name-lunch" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')window.fetchKcal('lunch')">
@@ -451,10 +313,7 @@
           </div>
         </div>
         <div class="meal-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <div class="meal-label" style="margin:0;">🌙 夕食</div>
-            <span id="f-kcal-dinner" style="font-size:12px;color:var(--text-dim);"></span>
-          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="meal-label" style="margin:0;">🌙 夕食</div><span id="f-kcal-dinner" style="font-size:12px;color:var(--text-dim);"></span></div>
           <div id="f-list-dinner"></div>
           <div class="meal-add-row">
             <input class="meal-inline-name" id="f-name-dinner" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')window.fetchKcal('dinner')">
@@ -464,10 +323,7 @@
           </div>
         </div>
         <div class="meal-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <div class="meal-label" style="margin:0;">🍪 間食</div>
-            <span id="f-kcal-snack" style="font-size:12px;color:var(--text-dim);"></span>
-          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="meal-label" style="margin:0;">🍪 間食</div><span id="f-kcal-snack" style="font-size:12px;color:var(--text-dim);"></span></div>
           <div id="f-list-snack"></div>
           <div class="meal-add-row">
             <input class="meal-inline-name" id="f-name-snack" placeholder="食べたものを入力" onkeydown="if(event.key==='Enter')window.fetchKcal('snack')">
@@ -480,7 +336,6 @@
       <button class="copy-btn" id="f-btn-meal" onclick="window.copyMeals()">📋 クロードにコピー</button>
     </div>
 
-    <!-- トレーニング -->
     <div id="f-panel-training" class="tab-panel">
       <div id="f-trainingContent"></div>
     </div>
@@ -490,103 +345,425 @@
 <script>
 (function(){
   function switchApp(app){
-    document.getElementById('panel-night').classList.toggle('active', app==='night');
-    document.getElementById('panel-fitlog').classList.toggle('active', app==='fitlog');
-    document.getElementById('nav-night').classList.toggle('active', app==='night');
-    document.getElementById('nav-fitlog').classList.toggle('active', app==='fitlog');
+    document.getElementById('panel-night').classList.toggle('active',app==='night');
+    document.getElementById('panel-fitlog').classList.toggle('active',app==='fitlog');
+    document.getElementById('nav-night').classList.toggle('active',app==='night');
+    document.getElementById('nav-fitlog').classList.toggle('active',app==='fitlog');
   }
-  window.switchApp = switchApp;
+  window.switchApp=switchApp;
 })();
 </script>
 
 <script>
 (function(){
-  var DAYS_JP   = ['日','月','火','水','木','金','土'];
-  var DAY_TYPES = ['rest','piano','run','rest','run','base','run'];
-  var TYPE_META = {
-    run:   { icon:'🏃', label:'トレーニング＋ランニングの日' },
-    piano: { icon:'🎹', label:'トレーニング＋ピアノの日'     },
-    base:  { icon:'💪', label:'トレーニングの日'              },
-    rest:  { icon:'😴', label:'休養日'                       }
+  var DAYS_JP=['日','月','火','水','木','金','土'];
+  var DAY_TYPES=['rest','piano','run','rest','run','base','run'];
+  var TYPE_META={
+    run:{icon:'🏃',label:'トレーニング＋ランニングの日'},
+    piano:{icon:'🎹',label:'トレーニング＋ピアノの日'},
+    base:{icon:'💪',label:'トレーニングの日'},
+    rest:{icon:'😴',label:'休養日'}
   };
-  var SCHEDULES = {
-    rest:  [
-      { key:'read',  icon:'📖', name:'読書' }
-    ],
-    base:  [
-      { key:'train', icon:'💪', name:'トレーニング' },
-      { key:'read',  icon:'📖', name:'読書' }
-    ],
-    run:   [
-      { key:'train', icon:'💪', name:'トレーニング' },
-      { key:'run',   icon:'🏃', name:'ランニング' },
-      { key:'read',  icon:'📖', name:'読書' }
-    ],
-    piano: [
-      { key:'train', icon:'💪', name:'トレーニング' },
-      { key:'piano', icon:'🎹', name:'ピアノ' },
-      { key:'read',  icon:'📖', name:'読書' }
-    ]
+  var SCHEDULES={
+    rest:[{key:'read',icon:'📖',name:'読書'}],
+    base:[{key:'train',icon:'💪',name:'トレーニング'},{key:'read',icon:'📖',name:'読書'}],
+    run:[{key:'train',icon:'💪',name:'トレーニング'},{key:'run',icon:'🏃',name:'ランニング'},{key:'read',icon:'📖',name:'読書'}],
+    piano:[{key:'train',icon:'💪',name:'トレーニング'},{key:'piano',icon:'🎹',name:'ピアノ'},{key:'read',icon:'📖',name:'読書'}]
   };
+  var now=new Date();
+  var todayDow=now.getDay();
+  var todayType=DAY_TYPES[todayDow];
+  var mondayOffset=(now.getDay()===0)?-6:-(now.getDay()-1);
+  var selectedOffset=0;
 
-  var now          = new Date();
-  var todayDow     = now.getDay();
-  var todayType    = DAY_TYPES[todayDow];
-  var dayOfWeek    = now.getDay();
-  var mondayOffset = (dayOfWeek===0) ? -6 : -(dayOfWeek-1);
-  var selectedOffset = 0;
+  function pad(n){return String(n).padStart(2,'0');}
+  function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'{}');}catch(e){return{};}}
+  function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function stateKey(d){return 'night_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
 
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function lsGet(key){ try{ return JSON.parse(localStorage.getItem(key)||'{}'); }catch(e){ return {}; } }
-  function lsSet(key,obj){ try{ localStorage.setItem(key,JSON.stringify(obj)); }catch(e){} }
-  function stateKey(d){ return 'night_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
-
-  document.getElementById('n-dowDisplay').textContent  = DAYS_JP[todayDow]+'曜日';
-  document.getElementById('n-dateDisplay').textContent = now.getFullYear()+'.'+pad(now.getMonth()+1)+'.'+pad(now.getDate());
-  document.getElementById('n-todayIcon').textContent   = TYPE_META[todayType].icon;
-  document.getElementById('n-todayTitle').textContent  = TYPE_META[todayType].label;
+  document.getElementById('n-dowDisplay').textContent=DAYS_JP[todayDow]+'曜日';
+  document.getElementById('n-dateDisplay').textContent=now.getFullYear()+'.'+pad(now.getMonth()+1)+'.'+pad(now.getDate());
+  document.getElementById('n-todayIcon').textContent=TYPE_META[todayType].icon;
+  document.getElementById('n-todayTitle').textContent=TYPE_META[todayType].label;
 
   function renderWeekStrip(){
-    var strip = document.getElementById('n-weekStrip');
-    strip.innerHTML = '';
+    var strip=document.getElementById('n-weekStrip');
+    strip.innerHTML='';
     for(var i=0;i<7;i++){
-      var offset = mondayOffset+i;
-      var d = new Date(now); d.setDate(d.getDate()+offset);
-      var dow   = d.getDay();
-      var type  = DAY_TYPES[dow];
-      var icon  = TYPE_META[type].icon;
-      var key   = stateKey(d);
-      var st    = lsGet(key);
-      var tasks = SCHEDULES[type];
-      var isToday    = (offset===0);
-      var isSelected = (offset===selectedOffset);
-      var pill = document.createElement('div');
-      pill.className = 'day-pill'+(isSelected?' active':'')+(isToday?' today':'');
-      var dotsHtml = tasks.map(function(t){
-        var cls = st[t.key]?'done':(isSelected?'active-day':'');
-        return '<div class="dp-dot '+cls+'"></div>';
-      }).join('');
-      pill.innerHTML =
-        '<div class="dp-name">'+DAYS_JP[dow]+'</div>'+
+      var offset=mondayOffset+i;
+      var d=new Date(now); d.setDate(d.getDate()+offset);
+      var dow=d.getDay(), type=DAY_TYPES[dow], icon=TYPE_META[type].icon;
+      var key=stateKey(d), st=lsGet(key);
+      var tasks=SCHEDULES[type];
+      var pill=document.createElement('div');
+      pill.className='day-pill'+(offset===selectedOffset?' active':'')+(offset===0?' today':'');
+      pill.innerHTML='<div class="dp-name">'+DAYS_JP[dow]+'</div>'+
         '<div class="dp-icon">'+icon+'</div>'+
-        '<div class="dp-dots">'+dotsHtml+'</div>';
-      (function(off){ pill.addEventListener('click',function(){ selectedOffset=off; renderWeekStrip(); renderTasks(); }); })(offset);
+        '<div class="dp-dots">'+tasks.map(function(t){
+          return '<div class="dp-dot '+(st[t.key]?'done':(offset===selectedOffset?'active-day':''))+'"></div>';
+        }).join('')+'</div>';
+      (function(off){pill.addEventListener('click',function(){selectedOffset=off;renderWeekStrip();renderTasks();});})(offset);
       strip.appendChild(pill);
     }
-    var active = strip.querySelector('.day-pill.active');
-    if(active) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    var a=strip.querySelector('.day-pill.active');
+    if(a) a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
   }
 
   function renderTasks(){
-    var d = new Date(now); d.setDate(d.getDate()+selectedOffset);
-    var dow   = d.getDay();
-    var type  = DAY_TYPES[dow];
-    var key   = stateKey(d);
-    var st    = lsGet(key);
-    var tasks = SCHEDULES[type];
-    var doneCount = tasks.filter(function(t){ return st[t.key]; }).length;
-    var total = tasks.length;
-    var pct   = total ? (doneCount/total*100) : 0;
+    var d=new Date(now); d.setDate(d.getDate()+selectedOffset);
+    var dow=d.getDay(), type=DAY_TYPES[dow];
+    var key=stateKey(d), st=lsGet(key);
+    var tasks=SCHEDULES[type];
+    var done=tasks.filter(function(t){return st[t.key];}).length;
+    var total=tasks.length;
+    var pct=total?(done/total*100):0;
 
-    document.getElementById('n-progressNum').textContent = doneCount+'/'+total;
-    var fill = document.getEle
+    document.getElementById('n-progressNum').textContent=done+'/'+total;
+    var fill=document.getElementById('n-progressFill');
+    fill.style.width=pct+'%';
+    fill.className='progress-fill'+(done===total&&total>0?' done-all':'');
+    document.getElementById('n-completeBanner').className='complete-banner'+(done===total&&total>0?' show':'');
+
+    var list=document.getElementById('n-taskList');
+    list.innerHTML='';
+    if(type==='rest'){
+      var rd=document.createElement('div');
+      rd.style.cssText='text-align:center;padding:16px 0 10px;font-size:22px;color:var(--text-dim);';
+      rd.textContent='😴 休養日';
+      list.appendChild(rd);
+    }
+    tasks.forEach(function(task){
+      var isDone=!!st[task.key];
+      var card=document.createElement('div');
+      card.className='task-card'+(isDone?' done':'');
+      card.innerHTML='<div class="task-check">'+(isDone?'✓':'')+'</div>'+
+        '<div class="task-info"><div class="task-name">'+task.icon+' '+task.name+'</div></div>'+
+        '<div class="task-status">'+(isDone?'達成':'タップ')+'</div>';
+      (function(t){card.addEventListener('click',function(){st[t.key]=!st[t.key];lsSet(key,st);renderWeekStrip();renderTasks();});})(task);
+      list.appendChild(card);
+    });
+  }
+
+  renderWeekStrip();
+  renderTasks();
+})();
+</script>
+
+<script>
+(function(){
+  var DAYS=['日','月','火','水','木','金','土'];
+  var SCHEDULE={
+    0:{type:'rest',icon:'🏖',title:'完全休養・チートデイ',desc:'今日はしっかり休んで回復させましょう。チートデイを楽しんで！'},
+    1:{type:'strength',icon:'💪',title:'胸・肩・三頭筋',exercises:[
+      {key:'pw',name:'プッシュアップ（ワイド）',target:'3セット × 12回'},
+      {key:'sp',name:'ダンベルショルダープレス',target:'3セット × 10回'},
+      {key:'sr',name:'サイドレイズ',target:'3セット × 15回'},
+      {key:'dp',name:'ダイヤモンドプッシュアップ',target:'3セット × 10回'},
+      {key:'pp',name:'パイクプッシュアップ',target:'2セット × 10回'}
+    ]},
+    2:{type:'running',icon:'🏃',title:'ランニング',desc:''},
+    3:{type:'rest',icon:'😴',title:'休養日',desc:'筋肉は休んでいる間に育ちます。ストレッチポールでほぐすだけでもOK。'},
+    4:{type:'running',icon:'🏃',title:'ランニング',desc:''},
+    5:{type:'strength',icon:'🦵',title:'脚・臀部・腰回り',
+      prep:'ストレッチポールで腸腰筋をほぐしてから開始！（腰痛予防に超重要）',
+      exercises:[
+        {key:'rdl',name:'ルーマニアンデッドリフト',target:'3セット × 12回'},
+        {key:'bss',name:'ブルガリアンスプリットスクワット',target:'3セット × 10回（左右）'},
+        {key:'ht',name:'ヒップスラスト',target:'3セット × 15回'},
+        {key:'cr',name:'カーフレイズ',target:'3セット × 20回'},
+        {key:'spr',name:'ストレッチポール：腸腰筋リリース',target:'各1分'}
+      ]},
+    6:{type:'running',icon:'🏃',title:'ランニング',desc:''}
+  };
+
+  var exState={}, sleepQuality=0;
+  var now=new Date(), dow=now.getDay(), today=SCHEDULE[dow];
+
+  function pad(n){return String(n).padStart(2,'0');}
+  function fval(id){var el=document.getElementById(id);return el?(el.value||''):'';}
+  function dateLabel(){return now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日（'+DAYS[dow]+'）';}
+
+  document.getElementById('f-dowDisplay').textContent=DAYS[dow]+'曜日';
+  document.getElementById('f-dateDisplay').textContent=now.getFullYear()+'.'+pad(now.getMonth()+1)+'.'+pad(now.getDate());
+  document.getElementById('f-todayIcon').textContent=today.icon;
+  document.getElementById('f-todayTitle').textContent=today.title;
+
+  function morningKey(){return 'fitlog_morning_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();}
+  function saveMorning(){try{localStorage.setItem(morningKey(),JSON.stringify({weight:fval('f-weight'),bodyfat:fval('f-bodyfat'),sleep:fval('f-sleep-hours'),notes:fval('f-notes')}));}catch(e){}}
+  function restoreMorning(){
+    try{
+      var d=JSON.parse(localStorage.getItem(morningKey())||'null'); if(!d) return;
+      if(d.weight) document.getElementById('f-weight').value=d.weight;
+      if(d.bodyfat) document.getElementById('f-bodyfat').value=d.bodyfat;
+      if(d.sleep) document.getElementById('f-sleep-hours').value=d.sleep;
+      if(d.notes) document.getElementById('f-notes').value=d.notes;
+    }catch(e){}
+  }
+  restoreMorning();
+
+  function switchTab(t){
+    document.querySelectorAll('#panel-fitlog .tab').forEach(function(el,i){el.classList.toggle('active',['morning','meal','training'][i]===t);});
+    ['morning','meal','training'].forEach(function(n){document.getElementById('f-panel-'+n).classList.toggle('active',n===t);});
+  }
+
+  function setSleepQ(q){
+    sleepQuality=(sleepQuality===q)?0:q;
+    document.querySelectorAll('.sq-btn').forEach(function(b){b.classList.toggle('active',parseInt(b.dataset.q)===sleepQuality);});
+  }
+
+  var MEAL_CATS=[
+    {key:'breakfast',label:'朝食',icon:'🌅'},
+    {key:'lunch',label:'昼食',icon:'☀️'},
+    {key:'dinner',label:'夕食',icon:'🌙'},
+    {key:'snack',label:'間食',icon:'🍪'}
+  ];
+  function mealKey(){return 'fitlog_meals2_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();}
+  function loadMeals(){try{return JSON.parse(localStorage.getItem(mealKey())||'{}');}catch(e){return{};}}
+  function saveMeals(d){try{localStorage.setItem(mealKey(),JSON.stringify(d));}catch(e){}}
+
+  function addMealCat(cat){
+    var name=(document.getElementById('f-name-'+cat).value||'').trim();
+    var kcal=parseInt(document.getElementById('f-kcal-input-'+cat).value||'0',10);
+    if(!name){document.getElementById('f-name-'+cat).focus();return;}
+    var data=loadMeals(); if(!data[cat]) data[cat]=[];
+    data[cat].push({id:Date.now(),name:name,kcal:isNaN(kcal)?0:kcal});
+    saveMeals(data);
+    document.getElementById('f-name-'+cat).value='';
+    document.getElementById('f-kcal-input-'+cat).value='';
+    renderMeals();
+  }
+  function deleteMealItem(cat,id){
+    var data=loadMeals();
+    data[cat]=(data[cat]||[]).filter(function(m){return m.id!==id;});
+    saveMeals(data); renderMeals();
+  }
+
+  var KCAL_DB=[
+    ['白米',168],['ご飯',168],['玄米',165],['おにぎり',185],['食パン',158],
+    ['トースト',158],['パン',200],['フランスパン',130],['うどん',105],['そば',132],
+    ['ラーメン',450],['チャーハン',400],['パスタ',380],['スパゲティ',380],
+    ['カレーライス',650],['親子丼',550],['牛丼',650],['豚丼',600],['天丼',700],['海鮮丼',500],
+    ['鶏むね肉',108],['鶏もも肉',190],['ささみ',98],['サラダチキン',105],
+    ['豚肉',180],['豚バラ',386],['牛肉',250],['牛バラ',371],['ひき肉',200],
+    ['唐揚げ',250],['から揚げ',250],['フライドチキン',300],
+    ['焼き鳥',180],['とんかつ',380],['ハンバーグ',350],['ステーキ',400],
+    ['ソーセージ',160],['ウインナー',160],['ベーコン',160],['ハム',120],
+    ['サーモン',138],['鮭',133],['マグロ',125],['ツナ',70],['ツナ缶',70],
+    ['サバ',247],['さば',247],['アジ',126],['エビ',82],['イカ',76],
+    ['タコ',76],['焼き魚',180],['刺身',150],['寿司',300],
+    ['卵',76],['たまご',76],['ゆで卵',76],['目玉焼き',100],['スクランブルエッグ',150],
+    ['チーズ',340],['牛乳',67],['ヨーグルト',62],['無脂肪ヨーグルト',40],
+    ['豆腐',56],['絹豆腐',56],['木綿豆腐',72],['納豆',200],['枝豆',135],
+    ['豆乳',46],['味噌汁',40],
+    ['サラダ',30],['レタス',12],['キャベツ',23],['トマト',19],['きゅうり',14],
+    ['ブロッコリー',33],['ほうれん草',20],['にんじん',41],['玉ねぎ',37],
+    ['じゃがいも',76],['さつまいも',132],['アボカド',187],
+    ['バナナ',86],['りんご',54],['みかん',46],['オレンジ',46],['ぶどう',59],
+    ['いちご',34],['スイカ',37],['メロン',42],
+    ['プロテインバー',200],['プロテイン',120],['プロテインシェイク',150],
+    ['サンドイッチ',280],['菓子パン',350],['カップ麺',350],['カップラーメン',350],
+    ['冷凍食品',300],['弁当',600],
+    ['ポテトチップス',540],['クッキー',500],['チョコレート',550],
+    ['アイス',200],['ソフトクリーム',150],['プリン',120],['ケーキ',350],['シュークリーム',200],
+    ['水',0],['お茶',0],['緑茶',0],['コーヒー',4],['ブラックコーヒー',4],
+    ['カフェラテ',90],['オレンジジュース',112],['野菜ジュース',40],
+    ['コーラ',180],['スポーツドリンク',50],['プロテイン飲料',150],['エナジードリンク',80],
+    ['ザバスヨーグルト',75],['ザバス ヨーグルト',75],
+    ['ザバスミルク',207],['ザバス ミルク',207],['ザバスミルクプロテイン',207],['ザバス',150],
+    ['スープ',60],['シチュー',250],['カレー',250],['煮物',120],['炒め物',200],['揚げ物',300],
+    ['ビッグマック',525],['フライドポテト',310],
+    ['吉野家 牛丼並',652],['すき家 牛丼並',648],['松屋 牛めし並',636],['サブウェイ',350]
+  ];
+  function estimateKcal(q){
+    q=q.toLowerCase().replace(/\s/g,'');
+    for(var i=0;i<KCAL_DB.length;i++){if(KCAL_DB[i][0].toLowerCase()===q)return KCAL_DB[i][1];}
+    var best=null,bestLen=0;
+    for(var j=0;j<KCAL_DB.length;j++){
+      var f=KCAL_DB[j][0].toLowerCase();
+      if(q.indexOf(f)!==-1||f.indexOf(q)!==-1){if(KCAL_DB[j][0].length>bestLen){best=KCAL_DB[j][1];bestLen=KCAL_DB[j][0].length;}}
+    }
+    return best;
+  }
+  function fetchKcal(cat){
+    var nameEl=document.getElementById('f-name-'+cat);
+    var kcalEl=document.getElementById('f-kcal-input-'+cat);
+    var aiBtn=document.getElementById('f-ai-btn-'+cat);
+    var name=(nameEl.value||'').trim();
+    if(!name){nameEl.focus();return;}
+    var result=estimateKcal(name);
+    if(result!==null){
+      kcalEl.value=result; kcalEl.classList.add('estimated');
+      if(aiBtn) aiBtn.textContent='✓';
+      setTimeout(function(){kcalEl.classList.remove('estimated');if(aiBtn) aiBtn.textContent='⚡';},2000);
+    }else{
+      kcalEl.placeholder='手入力してね'; kcalEl.focus();
+      if(aiBtn){aiBtn.textContent='？';setTimeout(function(){aiBtn.textContent='⚡';},2000);}
+    }
+  }
+  function renderMeals(){
+    var data=loadMeals(), total=0;
+    MEAL_CATS.forEach(function(c){
+      var items=data[c.key]||[];
+      var catKcal=items.reduce(function(s,m){return s+(m.kcal||0);},0);
+      total+=catKcal;
+      var lbl=document.getElementById('f-kcal-'+c.key);
+      if(lbl) lbl.textContent=catKcal?catKcal.toLocaleString()+' kcal':'';
+      var listEl=document.getElementById('f-list-'+c.key);
+      if(listEl) listEl.innerHTML=items.map(function(m){
+        return '<div class="meal-item"><span class="meal-item-name">'+m.name+'</span>'+
+          '<span class="meal-item-kcal">'+(m.kcal?m.kcal.toLocaleString()+' kcal':'')+'</span>'+
+          '<button class="meal-item-del" onclick="window.deleteMealItem(\''+c.key+'\','+m.id+')">✕</button></div>';
+      }).join('');
+    });
+    var disp=document.getElementById('f-totalKcal'); if(disp) disp.textContent=total.toLocaleString();
+  }
+
+  function runLogKey(y,m){return 'run_log_'+y+'_'+String(m+1).padStart(2,'0');}
+  function loadRunLog(){
+    var d=new Date(now), key=runLogKey(d.getFullYear(),d.getMonth());
+    try{
+      var data=JSON.parse(localStorage.getItem(key)||'{}');
+      var todayKey=d.toISOString().split('T')[0];
+      var monthly=0; for(var k in data){if(data.hasOwnProperty(k)) monthly+=parseFloat(data[k].km)||0;}
+      return{today:data[todayKey]||{},monthly:monthly,data:data,key:key,todayKey:todayKey};
+    }catch(e){return{today:{},monthly:0,data:{},key:key,todayKey:new Date(now).toISOString().split('T')[0]};}
+  }
+  function buildRunHistory(){
+    var keys=[];
+    try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('run_log_')===0) keys.push(k);}}catch(e){}
+    keys.sort().reverse(); if(!keys.length) return '';
+    return keys.map(function(k){
+      try{
+        var data=JSON.parse(localStorage.getItem(k)||'{}');
+        var total=0; for(var rk in data){if(data.hasOwnProperty(rk)) total+=parseFloat(data[rk].km)||0;}
+        return k.replace('run_log_','').replace('_','/')+'：<b style="color:var(--accent)">'+total.toFixed(1)+' km</b>';
+      }catch(e){return '';}
+    }).filter(Boolean).join('　');
+  }
+  function saveRunLog(){
+    var km=parseFloat(document.getElementById('f-run-km')?document.getElementById('f-run-km').value:'')||0;
+    var min=parseInt(document.getElementById('f-run-min')?document.getElementById('f-run-min').value:'')||0;
+    if(!km&&!min) return;
+    var rLog=loadRunLog();
+    rLog.data[rLog.todayKey]={km:km,min:min};
+    try{localStorage.setItem(rLog.key,JSON.stringify(rLog.data));}catch(e){}
+    var monthly=0; for(var sk in rLog.data){if(rLog.data.hasOwnProperty(sk)) monthly+=parseFloat(rLog.data[sk].km)||0;}
+    var el=document.getElementById('f-run-monthly'); if(el) el.textContent=monthly.toFixed(1)+' km';
+    var hist=document.getElementById('f-run-history'); if(hist) hist.innerHTML=buildRunHistory();
+    var btn=document.querySelector('.run-log-save');
+    if(btn){btn.textContent='✓ 保存！';btn.style.background='var(--success)';setTimeout(function(){btn.textContent='記録を保存';btn.style.background='';},2000);}
+  }
+
+  function renderTraining(){
+    var c=document.getElementById('f-trainingContent'); if(!c) return;
+    if(today.type==='rest'){
+      c.innerHTML='<div class="rest-card"><div class="rest-icon">'+today.icon+'</div><div class="rest-title">'+today.title+'</div><div class="rest-text">'+today.desc+'</div></div>';
+      return;
+    }
+    if(today.type==='running'){
+      var rLog=loadRunLog();
+      c.innerHTML=
+        '<div class="run-log-wrap">'+
+          '<div class="run-log-inputs">'+
+            '<div class="run-log-field">'+
+              '<div class="run-log-label">距離</div>'+
+              '<div class="run-log-val-row">'+
+                '<input class="run-log-input" id="f-run-km" type="text" inputmode="decimal" placeholder="5.0" value="'+(rLog.today.km||'')+'">'+
+                '<span class="run-log-unit">km</span>'+
+              '</div>'+
+            '</div>'+
+            '<div class="run-log-field">'+
+              '<div class="run-log-label">時間</div>'+
+              '<div class="run-log-val-row">'+
+                '<input class="run-log-input" id="f-run-min" type="text" inputmode="numeric" placeholder="30" value="'+(rLog.today.min||'')+'">'+
+                '<span class="run-log-unit">分</span>'+
+              '</div>'+
+            '</div>'+
+          '</div>'+
+          '<button class="run-log-save" onclick="window.saveRunLog()">記録を保存</button>'+
+          '<div class="run-log-month">'+
+            '<div style="margin-bottom:6px;">📅 今月の合計：<b id="f-run-monthly">'+rLog.monthly.toFixed(1)+' km</b></div>'+
+            '<div id="f-run-history">'+buildRunHistory()+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<button class="copy-btn" id="f-btn-training" onclick="window.copyTraining()">📋 クロードにコピー</button>';
+      return;
+    }
+    var total=today.exercises.length;
+    var done=today.exercises.filter(function(e){return exState[e.key]==='done';}).length;
+    var pct=total?(done/total*100):0;
+    var html='';
+    if(today.prep) html+='<div class="prep-alert">⚡ '+today.prep+'</div>';
+    html+='<div class="progress-wrap"><div class="progress-head"><span class="progress-lbl">達成状況</span><span class="progress-num">'+done+'/'+total+'</span></div>'+
+      '<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div></div>';
+    today.exercises.forEach(function(ex){
+      var s=exState[ex.key]||'none';
+      html+='<div class="ex-card '+(s==='done'?'done':s==='failed'?'failed':'')+'" onclick="window.toggleEx(\''+ex.key+'\')">'+
+        '<div class="ex-check">'+(s==='done'?'✓':s==='failed'?'✗':'')+'</div>'+
+        '<div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-target">'+ex.target+'</div></div>'+
+        '<div class="ex-status">'+(s==='done'?'達成':s==='failed'?'未達成':'タップ')+'</div></div>';
+    });
+    html+='<button class="copy-btn" id="f-btn-training" onclick="window.copyTraining()">📋 クロードにコピー</button>';
+    c.innerHTML=html;
+  }
+
+  function toggleEx(key){
+    var s=exState[key]||'none';
+    exState[key]=s==='none'?'done':s==='done'?'failed':'none';
+    renderTraining();
+  }
+
+  function send(text,btnId){
+    var fb=function(){var ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);flash(btnId);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){flash(btnId);}).catch(fb);}else{fb();}
+  }
+  function flash(id){
+    var btn=document.getElementById(id); if(!btn) return;
+    var orig=btn.innerHTML; btn.innerHTML='✅ コピーしました！'; btn.classList.add('ok');
+    setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('ok');},2000);
+  }
+  function copyMorning(){
+    var sqLabel=['','😴 不良','😐 普通','😊 良好','😄 最高'];
+    send('【'+dateLabel()+'】朝の記録\n\n📊 身体データ\n睡眠：'+(fval('f-sleep-hours')||'未記入')+'時間（'+(sleepQuality?sqLabel[sleepQuality]:'未記入')+'）\n体重：'+(fval('f-weight')||'未記入')+'kg　体脂肪率：'+(fval('f-bodyfat')||'未記入')+'%\n\n💬 気になること\n'+(fval('f-notes')||'なし'),'f-btn-morning');
+  }
+  function copyMeals(){
+    var data=loadMeals(),total=0;
+    var text='【'+dateLabel()+'】食事記録\n\n';
+    MEAL_CATS.forEach(function(c){
+      var items=data[c.key]||[]; if(!items.length) return;
+      text+=c.icon+' '+c.label+'\n';
+      items.forEach(function(m){text+='  ・'+m.name;if(m.kcal){text+='（'+m.kcal.toLocaleString()+' kcal）';total+=m.kcal;}text+='\n';});
+    });
+    text+='\n合計：'+total.toLocaleString()+' kcal';
+    send(text,'f-btn-meal');
+  }
+  function copyTraining(){
+    var text='【'+dateLabel()+'】トレーニング記録\n';
+    if(today.type==='running'){
+      var rl=loadRunLog(); text+='🏃 ランニング';
+      if(rl.today.km) text+='：'+rl.today.km+'km / '+(rl.today.min||'?')+'分';
+    }else if(today.type==='strength'){
+      text+='💪 '+today.title+'\n\n';
+      today.exercises.forEach(function(ex){var s=exState[ex.key]||'none';text+=(s==='done'?'✅':s==='failed'?'❌':'－')+' '+ex.name+'（'+ex.target+'）\n';});
+    }
+    send(text,'f-btn-training');
+  }
+
+  renderTraining();
+  renderMeals();
+
+  window.switchTab=switchTab;
+  window.saveMorning=saveMorning;
+  window.setSleepQ=setSleepQ;
+  window.copyMorning=copyMorning;
+  window.copyMeals=copyMeals;
+  window.copyTraining=copyTraining;
+  window.fetchKcal=fetchKcal;
+  window.addMealCat=addMealCat;
+  window.deleteMealItem=deleteMealItem;
+  window.toggleEx=toggleEx;
+  window.saveRunLog=saveRunLog;
+})();
+</script>
+</body>
+</html>
