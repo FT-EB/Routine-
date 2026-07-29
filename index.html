@@ -176,6 +176,21 @@
     .run-log-month { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; font-size:12px; color:var(--text-dim); }
     .run-log-month b { color:var(--accent); font-size:16px; }
 
+    .read-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; }
+    .read-title-row { margin-bottom:10px; }
+    .read-input { width:100%; background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; color:var(--text); font-family:var(--font-b); font-size:13px; outline:none; }
+    .read-input:focus { border-color:var(--accent); }
+    .read-pages-row { display:flex; align-items:center; gap:10px; margin-top:10px; }
+    .read-pages-input { width:100px; background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; color:var(--text); font-family:var(--font-d); font-size:22px; outline:none; }
+    .read-pages-input:focus { border-color:var(--accent); }
+    .read-unit { font-size:12px; color:var(--text-dim); }
+
+    .piano-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:15px 16px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:border-color 0.2s,background 0.2s; }
+    .piano-card:active { opacity:0.8; transform:scale(0.99); }
+    .piano-card.done { border-color:var(--success); background:rgba(34,197,94,0.06); }
+    .piano-check { width:42px; height:42px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; transition:all 0.2s; color:transparent; }
+    .piano-card.done .piano-check { background:var(--success); border-color:var(--success); color:white; }
+
   </style>
 </head>
 <body>
@@ -357,18 +372,17 @@
 <script>
 (function(){
   var DAYS_JP=['日','月','火','水','木','金','土'];
-  var DAY_TYPES=['rest','piano','run','rest','run','base','run'];
+  // 0=日 1=月 2=火 3=水 4=木 5=金 6=土
+  var DAY_TYPES=['off','base','run','base','off','base','run'];
   var TYPE_META={
-    run:{icon:'🏃',label:'トレーニング＋ランニングの日'},
-    piano:{icon:'🎹',label:'トレーニング＋ピアノの日'},
-    base:{icon:'💪',label:'トレーニングの日'},
-    rest:{icon:'😴',label:'休養日'}
+    run:{icon:'🏃',label:'ランニング＋読書の日'},
+    base:{icon:'💪',label:'トレーニング＋読書の日'},
+    off:{icon:'🎹',label:'オフ・ピアノの日'}
   };
   var SCHEDULES={
-    rest:[{key:'read',icon:'📖',name:'読書'}],
+    off:[{key:'piano',icon:'🎹',name:'ピアノ'}],
     base:[{key:'train',icon:'💪',name:'トレーニング'},{key:'read',icon:'📖',name:'読書'}],
-    run:[{key:'train',icon:'💪',name:'トレーニング'},{key:'run',icon:'🏃',name:'ランニング'},{key:'read',icon:'📖',name:'読書'}],
-    piano:[{key:'train',icon:'💪',name:'トレーニング'},{key:'piano',icon:'🎹',name:'ピアノ'},{key:'read',icon:'📖',name:'読書'}]
+    run:[{key:'run',icon:'🏃',name:'ランニング'},{key:'read',icon:'📖',name:'読書'}]
   };
   var now=new Date();
   var todayDow=now.getDay();
@@ -426,12 +440,6 @@
 
     var list=document.getElementById('n-taskList');
     list.innerHTML='';
-    if(type==='rest'){
-      var rd=document.createElement('div');
-      rd.style.cssText='text-align:center;padding:16px 0 10px;font-size:22px;color:var(--text-dim);';
-      rd.textContent='😴 休養日';
-      list.appendChild(rd);
-    }
     tasks.forEach(function(task){
       var isDone=!!st[task.key];
       var card=document.createElement('div');
@@ -452,28 +460,27 @@
 <script>
 (function(){
   var DAYS=['日','月','火','水','木','金','土'];
+  var CIRCUIT=[
+    {key:'sq',  name:'スクワット',                    target:'30回'},
+    {key:'lsq', name:'スプリットスクワット（前後・左右）', target:'左右30回'},
+    {key:'ovp', name:'バー：立位で持ち上げる',           target:'30回'},
+    {key:'row', name:'バー：胸に引き寄せる（背中）',      target:'30回（前傾＋肩甲骨で引く）'},
+    {key:'leg', name:'寝転んで足上げ下げ',               target:'30回'},
+    {key:'pl',  name:'プランク',                        target:'30回'},
+    {key:'side',name:'横腹のトレーニング（左右）',        target:'左右30回'},
+    {key:'back',name:'背筋',                            target:'30回'},
+    {key:'bd',  name:'うつ伏せ対角上げ下げ（バードドッグ）',target:'左右30回ずつ'},
+    {key:'mc',  name:'マウンテンクライマー',             target:'50回'},
+    {key:'bp',  name:'寝転んでバー上げ下げ（ベンチプレス動作）',target:'50回'}
+  ];
   var SCHEDULE={
-    0:{type:'rest',icon:'🏖',title:'完全休養・チートデイ',desc:'今日はしっかり休んで回復させましょう。チートデイを楽しんで！'},
-    1:{type:'strength',icon:'💪',title:'胸・肩・三頭筋',exercises:[
-      {key:'pw',name:'プッシュアップ（ワイド）',target:'3セット × 12回'},
-      {key:'sp',name:'ダンベルショルダープレス',target:'3セット × 10回'},
-      {key:'sr',name:'サイドレイズ',target:'3セット × 15回'},
-      {key:'dp',name:'ダイヤモンドプッシュアップ',target:'3セット × 10回'},
-      {key:'pp',name:'パイクプッシュアップ',target:'2セット × 10回'}
-    ]},
-    2:{type:'running',icon:'🏃',title:'ランニング',desc:''},
-    3:{type:'rest',icon:'😴',title:'休養日',desc:'筋肉は休んでいる間に育ちます。ストレッチポールでほぐすだけでもOK。'},
-    4:{type:'running',icon:'🏃',title:'ランニング',desc:''},
-    5:{type:'strength',icon:'🦵',title:'脚・臀部・腰回り',
-      prep:'ストレッチポールで腸腰筋をほぐしてから開始！（腰痛予防に超重要）',
-      exercises:[
-        {key:'rdl',name:'ルーマニアンデッドリフト',target:'3セット × 12回'},
-        {key:'bss',name:'ブルガリアンスプリットスクワット',target:'3セット × 10回（左右）'},
-        {key:'ht',name:'ヒップスラスト',target:'3セット × 15回'},
-        {key:'cr',name:'カーフレイズ',target:'3セット × 20回'},
-        {key:'spr',name:'ストレッチポール：腸腰筋リリース',target:'各1分'}
-      ]},
-    6:{type:'running',icon:'🏃',title:'ランニング',desc:''}
+    0:{type:'off',icon:'🎹',title:'ピアノ・完全休養（チートデイ）',desc:'今日はしっかり休んで回復させましょう。ピアノを楽しんで、チートデイも満喫を！'},
+    1:{type:'circuit',icon:'💪',title:'全身サーキット',exercises:CIRCUIT},
+    2:{type:'running',icon:'🏃',title:'ランニング',desc:'会話できるゆっくりペースで。腰への負担軽減のため走る前に股関節まわりを軽くストレッチ。'},
+    3:{type:'circuit',icon:'💪',title:'全身サーキット',exercises:CIRCUIT},
+    4:{type:'off',icon:'🎹',title:'ピアノ・休養日',desc:'筋肉は休んでいる間に育ちます。今日はピアノでアクティブレストを。'},
+    5:{type:'circuit',icon:'💪',title:'全身サーキット',exercises:CIRCUIT},
+    6:{type:'running',icon:'🏃',title:'ランニング',desc:'会話できるゆっくりペースで。余裕があれば少し距離を伸ばしてOK！'}
   };
 
   var exState={}, sleepQuality=0;
@@ -654,10 +661,57 @@
     if(btn){btn.textContent='✓ 保存！';btn.style.background='var(--success)';setTimeout(function(){btn.textContent='記録を保存';btn.style.background='';},2000);}
   }
 
+  // ── 読書ログ（タイトル自動継続） ──
+  function readKey(){return 'reading_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();}
+  function loadReading(){
+    try{
+      var d=JSON.parse(localStorage.getItem(readKey())||'null');
+      if(d) return d;
+    }catch(e){}
+    var lastTitle='';
+    try{ lastTitle=localStorage.getItem('reading_last_title')||''; }catch(e){}
+    return {title:lastTitle,pages:''};
+  }
+  function saveReading(){
+    var title=(document.getElementById('f-read-title')||{}).value||'';
+    var pages=(document.getElementById('f-read-pages')||{}).value||'';
+    try{
+      localStorage.setItem(readKey(),JSON.stringify({title:title,pages:pages}));
+      if(title) localStorage.setItem('reading_last_title',title);
+    }catch(e){}
+  }
+  function readingSection(){
+    var r=loadReading();
+    return '<div class="read-card">'+
+      '<div class="sec-label" style="margin-bottom:10px;">📖 読書</div>'+
+      '<div class="read-title-row"><input class="read-input" id="f-read-title" type="text" placeholder="本のタイトル" value="'+(r.title||'').replace(/"/g,'&quot;')+'" oninput="window.saveReading()"></div>'+
+      '<div class="read-pages-row"><input class="read-pages-input" id="f-read-pages" type="number" inputmode="numeric" placeholder="0" value="'+(r.pages||'')+'" oninput="window.saveReading()"><span class="read-unit">ページ</span></div>'+
+    '</div>';
+  }
+
+  // ── ピアノ ──
+  function pianoKey(){return 'piano_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();}
+  function loadPiano(){try{return localStorage.getItem(pianoKey())==='1';}catch(e){return false;}}
+  function togglePiano(){
+    var cur=loadPiano();
+    try{localStorage.setItem(pianoKey(),cur?'0':'1');}catch(e){}
+    renderTraining();
+  }
+  function pianoSection(){
+    var done=loadPiano();
+    return '<div class="piano-card'+(done?' done':'')+'" onclick="window.togglePiano()">'+
+      '<div class="piano-check">'+(done?'✓':'')+'</div>'+
+      '<div class="task-info"><div class="task-name">🎹 ピアノ</div></div>'+
+      '<div class="task-status">'+(done?'達成':'タップ')+'</div>'+
+    '</div>';
+  }
+
   function renderTraining(){
     var c=document.getElementById('f-trainingContent'); if(!c) return;
-    if(today.type==='rest'){
-      c.innerHTML='<div class="rest-card"><div class="rest-icon">'+today.icon+'</div><div class="rest-title">'+today.title+'</div><div class="rest-text">'+today.desc+'</div></div>';
+    if(today.type==='off'){
+      c.innerHTML='<div class="rest-card"><div class="rest-icon">'+today.icon+'</div><div class="rest-title">'+today.title+'</div><div class="rest-text">'+today.desc+'</div></div>'+
+        pianoSection()+
+        '<button class="copy-btn" id="f-btn-training" onclick="window.copyTraining()">📋 クロードにコピー</button>';
       return;
     }
     if(today.type==='running'){
@@ -686,6 +740,7 @@
             '<div id="f-run-history">'+buildRunHistory()+'</div>'+
           '</div>'+
         '</div>'+
+        readingSection()+
         '<button class="copy-btn" id="f-btn-training" onclick="window.copyTraining()">📋 クロードにコピー</button>';
       return;
     }
@@ -703,8 +758,18 @@
         '<div class="ex-info"><div class="ex-name">'+ex.name+'</div><div class="ex-target">'+ex.target+'</div></div>'+
         '<div class="ex-status">'+(s==='done'?'達成':s==='failed'?'未達成':'タップ')+'</div></div>';
     });
+    html+='<div class="note-card" style="margin-bottom:10px;"><div class="sec-label" style="margin-bottom:8px;">🍽 今日の食事メモ（トレーニング完了時に記録）</div><textarea class="note-input" id="f-train-meal" oninput="window.saveTrainMeal()" placeholder="朝・昼・夜で食べたものを記録" rows="3">'+loadTrainMeal()+'</textarea></div>';
+    html+=readingSection();
     html+='<button class="copy-btn" id="f-btn-training" onclick="window.copyTraining()">📋 クロードにコピー</button>';
     c.innerHTML=html;
+  }
+
+  // ── トレーニング完了時の食事メモ ──
+  function trainMealKey(){return 'train_meal_'+now.getFullYear()+'_'+(now.getMonth()+1)+'_'+now.getDate();}
+  function loadTrainMeal(){try{return localStorage.getItem(trainMealKey())||'';}catch(e){return'';}}
+  function saveTrainMeal(){
+    var v=(document.getElementById('f-train-meal')||{}).value||'';
+    try{localStorage.setItem(trainMealKey(),v);}catch(e){}
   }
 
   function toggleEx(key){
@@ -742,9 +807,18 @@
     if(today.type==='running'){
       var rl=loadRunLog(); text+='🏃 ランニング';
       if(rl.today.km) text+='：'+rl.today.km+'km / '+(rl.today.min||'?')+'分';
-    }else if(today.type==='strength'){
+      text+='\n';
+    }else if(today.type==='circuit'){
       text+='💪 '+today.title+'\n\n';
       today.exercises.forEach(function(ex){var s=exState[ex.key]||'none';text+=(s==='done'?'✅':s==='failed'?'❌':'－')+' '+ex.name+'（'+ex.target+'）\n';});
+      var meal=loadTrainMeal();
+      if(meal) text+='\n🍽 食事メモ\n'+meal+'\n';
+    }else if(today.type==='off'){
+      text+=(loadPiano()?'🎹 ピアノ：完了 ✅':'🎹 ピアノ：未記録')+'\n';
+    }
+    if(today.type!=='off'){
+      var r=loadReading();
+      if(r.title||r.pages) text+='\n📖 読書：'+(r.title||'（タイトル未記入）')+'　'+(r.pages||0)+'ページ\n';
     }
     send(text,'f-btn-training');
   }
@@ -763,6 +837,9 @@
   window.deleteMealItem=deleteMealItem;
   window.toggleEx=toggleEx;
   window.saveRunLog=saveRunLog;
+  window.saveReading=saveReading;
+  window.togglePiano=togglePiano;
+  window.saveTrainMeal=saveTrainMeal;
 })();
 </script>
 </body>
